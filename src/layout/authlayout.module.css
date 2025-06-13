@@ -1,0 +1,22 @@
+.auth{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 10rem;
+    background-color: #FFFDF9;
+    color: #333;
+    height: 100vh;
+}
+
+.auth .left{
+    width: 65%;
+}
+.auth h1{
+    font-size: 7rem;
+}
+.auth h2{
+    margin-top : 4rem;
+}
+.auth p{
+    margin-top: .5rem;
+}

@@ -1,0 +1,68 @@
+.login {
+  width: 420px;
+  min-height: 520px;
+  padding: 2rem;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #e8decf;
+  background-color: #fffdf8;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease-in-out;
+}
+
+.login h1 {
+  margin-bottom: 1.5rem;
+  font-size: 2.2rem;
+  color: #3a2f27;
+  font-weight: 700;
+}
+
+.login input {
+  transition: all 0.3s ease-in-out;
+  border: none;
+  padding: 0.7rem 1rem;
+  border-radius: 8px;
+  margin: 0.6rem 0;
+  font-size: 1.1rem;
+  background: transparent;
+  border-bottom: 2px solid #d3c6ae;
+  width: 100%;
+  max-width: 300px;
+  outline: none;
+  color: #3a2f27;
+}
+
+.login input:focus {
+  border-bottom: 2px solid #ff6b6b;
+}
+
+.login a {
+  color: #4d3b2d;
+  font-size: 0.95rem;
+  margin-top: 0.5rem;
+  text-decoration: underline;
+  transition: color 0.2s ease;
+}
+
+.login a:hover {
+  color: #ff6b6b;
+}
+
+.login span {
+  font-size: 0.9rem;
+  color: #3a2f27;
+  margin-top: 1rem;
+}
+
+.login span a {
+  font-weight: bold;
+  text-decoration: underline;
+  color: #3a2f27;
+}
+
+.login span a:hover {
+  color: #ff6b6b;
+}

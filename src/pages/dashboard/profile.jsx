@@ -83,6 +83,7 @@ export default function Profile() {
       username: form.username,
       bio: form.bio,
       avatar: form.avatar,
+      email : form.email
     };
 
     if (form.password.trim() && form.confirmPassword.trim()) {

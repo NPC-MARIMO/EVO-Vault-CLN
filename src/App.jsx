@@ -20,17 +20,41 @@ import FamilySettings from "./pages/family/familysettings";
 import VaultViewPage from "./pages/vault/vaultviewpage";
 import Notification from "./pages/dashboard/notification";
 import NF from "./pages/notfound/nf";
+import { useSelector } from "react-redux";
+import PublicRoute from "./middleware/publicroute";
 
 function App() {
+
+
   return (
     <Router>
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={<AuthLayout />}>
-          <Route path="/" element={<Login />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/forgot-password" element={<Forgot />} />
+          <Route
+            path="/login"
+            element={
+              <PublicRoute>
+                <Login />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/register"
+            element={
+              <PublicRoute>
+                <Register />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/forgot-password"
+            element={
+              <PublicRoute>
+                <Forgot />
+              </PublicRoute>
+            }
+          />
         </Route>
 
         {/* Protected Routes */}

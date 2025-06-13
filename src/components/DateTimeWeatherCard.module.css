@@ -1,0 +1,40 @@
+.card {
+  width: calc(400px - 2rem);
+  max-height: calc(35vh - 5rem);
+  margin-top: 2rem;
+  backdrop-filter: blur(8px);
+  border-radius: 20px;
+  padding: 50px;
+  color: #1e1e1e;
+  transition: all 0.3s ease;
+}
+
+.time {
+  font-size: 2.4rem;
+  font-weight: 600;
+}
+
+.date {
+  font-size: 1rem;
+  color: #666;
+}
+
+.weather {
+  gap: 16px;
+    }
+
+.icon {
+  font-size: 2.4rem;
+}
+
+.temp {
+  font-size: 1.6rem;
+  font-weight: 500;
+  color: #0077ff;
+}
+
+.condition {
+  font-size: 1rem;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  color: #444;
+}

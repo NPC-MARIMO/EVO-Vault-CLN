@@ -6,12 +6,20 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { getUser, updateProfile } from "../../store/authSlice";
 import { uploadImage } from "../../services/cloudinary";
+import Popup from "../../components/Popup";
 
 export default function Profile() {
   const dispatch = useDispatch();
-  console.log("Token from localStorage:", localStorage.getItem("token"));
 
   const { user } = useSelector((state) => state.auth);
+
+  const [popup, setPopup] = useState({
+    text : null,
+    handleClick1 : null,
+    handleClick2 : null,
+    cta1 : null,
+    cta2 : null
+  });
 
   const [avatarPreview, setAvatarPreview] = useState(null);
   const [form, setForm] = useState({
@@ -75,6 +83,16 @@ export default function Profile() {
       alert("Image upload failed.");
     }
   };
+
+  const closePopup = () =>
+  setPopup({
+    text: null,
+    handleClick1: null,
+    handleClick2: null,
+    cta1: null,
+    cta2: null,
+  });
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -92,11 +110,17 @@ export default function Profile() {
     }
 
     dispatch(updateProfile(updatedPayload));
-    console.log("Form ready to submit:", updatedPayload);
+    setPopup({
+       text:"Profile Updated Successfully",
+        handleClick1 : closePopup, 
+        cta1 : "Close", })
   };
 
   return (
     <div className={styles.pf}>
+      {/* popup */}
+      {popup.text && <Popup {...popup} />}
+    
       <div className={styles.top}>
         <div className={styles.profile}>
           <div className={styles.dp}>

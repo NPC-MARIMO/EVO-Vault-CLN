@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 // middleware
 import ProtectedRoute from "./middleware/protectedroute";
@@ -27,7 +27,6 @@ function App() {
 
 
   return (
-    <Router>
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={<AuthLayout />}>
@@ -74,7 +73,6 @@ function App() {
         {/* Catch All */}
         <Route path="*" element={<NF />} />
       </Routes>
-    </Router>
   );
 }
 

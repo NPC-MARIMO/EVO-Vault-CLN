@@ -1,0 +1,23 @@
+.FamilyCard{
+    width: 250px;
+    height: 150px;
+    border-radius: 20px;
+    margin-top: 1rem;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    border: 5px solid white;
+    background: #F5E9DA;
+
+}
+
+.FamilyCard h1{
+    font-size: 2.5rem;
+    
+}
+.cta{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}

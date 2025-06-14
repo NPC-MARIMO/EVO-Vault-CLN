@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { data } from "react-router-dom";
 
 // Register
 export const registerUser = createAsyncThunk("auth/register", async (data, thunkAPI) => {
@@ -14,71 +15,109 @@ export const registerUser = createAsyncThunk("auth/register", async (data, thunk
 // Login
 export const loginUser = createAsyncThunk("auth/login", async (data, thunkAPI) => {
   try {
-    const res = await axios.post(`${import.meta.env.VITE_API_URL}/auth/login`, data, { withCredentials: true });
+    const res = await axios.post(`${import.meta.env.VITE_API_URL}/auth/login`, data, {
+      withCredentials: true,
+    });
     const { token, user } = res.data;
+
     localStorage.setItem("token", token);
+    localStorage.setItem("user", JSON.stringify(user)); // store user safely
     return { user, token };
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response?.data?.message || "Login failed");
   }
 });
 
-// get 
+// Get User
 export const getUser = createAsyncThunk("auth/getUser", async (_, thunkAPI) => {
   try {
     const token = localStorage.getItem("token");
-
     const res = await axios.get(`${import.meta.env.VITE_API_URL}/auth/user`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-      withCredentials: true, // if you also use cookies
+      withCredentials: true,
     });
-
     return res.data.user;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response?.data?.message || "Failed to fetch user");
   }
 });
 
-//update profile
+// Update Profile
 export const updateProfile = createAsyncThunk("auth/updateProfile", async (data, thunkAPI) => {
   try {
     const token = localStorage.getItem("token");
-
-    const res = await axios.put(
-      `${import.meta.env.VITE_API_URL}/profile/update-profile`,
-      data,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
-    return res.data.user; // assuming you return updated user
+    const res = await axios.put(`${import.meta.env.VITE_API_URL}/profile/update-profile`, data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const updatedUser = res.data.user;
+    localStorage.setItem("user", JSON.stringify(updatedUser)); // update local storage
+    return updatedUser;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response?.data?.message || "Update failed");
   }
 });
 
 
+export const getParticularUser = createAsyncThunk(
+  "auth/getParticularUser",
+  async (searchValue, thunkAPI) => {
+    try {
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_URL}/profile/get-user`,
+        {
+          params: { search: searchValue }, // 👈 Correctly sent as query
+        }
+      );
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Failed to fetch user"
+      );
+    }
+  }
+);
+
+
+// Safely get stored user from localStorage
+let storedUser = null;
+try {
+  const raw = localStorage.getItem("user");
+  storedUser = raw && raw !== "undefined" ? JSON.parse(raw) : null;
+} catch {
+  storedUser = null;
+}
+
 // Slice
 const authSlice = createSlice({
   name: "auth",
   initialState: {
-    user: null,
+    user: storedUser,
     token: localStorage.getItem("token") || null,
     loading: false,
     error: null,
+    searchedUser: null,
+    searchedUserLoading: false,
+    searchedUserError: null,
   },
+
   reducers: {
     logout: (state) => {
       state.user = null;
       state.token = null;
       localStorage.removeItem("token");
-    }
+      localStorage.removeItem("user");
+    },
+    clearSearchedUser: (state) => {
+      state.searchedUser = null;
+      state.searchedUserError = null;
+      state.searchedUserLoading = false;
+    },
   },
+
   extraReducers: (builder) => {
     builder
       // Register
@@ -107,7 +146,10 @@ const authSlice = createSlice({
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-      }).addCase(getUser.pending, (state) => {
+      })
+
+      // Get User
+      .addCase(getUser.pending, (state) => {
         state.loading = true;
       })
       .addCase(getUser.fulfilled, (state, action) => {
@@ -117,19 +159,37 @@ const authSlice = createSlice({
       .addCase(getUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-      }).addCase(updateProfile.pending, (state) => {
+      })
+
+      // Update Profile
+      .addCase(updateProfile.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
       .addCase(updateProfile.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload; 
+        state.user = action.payload;
       })
       .addCase(updateProfile.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
+      .addCase(getParticularUser.pending, (state) => {
+        state.searchedUserLoading = true;
+        state.searchedUser = null;
+        state.searchedUserError = null;
+      })
+      .addCase(getParticularUser.fulfilled, (state, action) => {
+        state.searchedUserLoading = false;
+        state.searchedUser = action.payload;
+      })
+      .addCase(getParticularUser.rejected, (state, action) => {
+        state.searchedUserLoading = false;
+        state.searchedUser = null;
+        state.searchedUserError = action.payload;
+      });
   },
 });
-export const { logout } = authSlice.actions;
+
+export const { logout, clearSearchedUser } = authSlice.actions;
 export default authSlice.reducer;

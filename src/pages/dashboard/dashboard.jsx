@@ -5,53 +5,72 @@ import { Link, useNavigate } from "react-router-dom";
 import DateTimeWeatherCard from "../../components/DateTimeWeatherCard";
 import { useDispatch, useSelector } from "react-redux";
 import { getUser, logout } from "../../store/authSlice";
-import { getFamily } from "../../store/familySlice"; // ✅ Import thunk
+import { getFamily } from "../../store/familySlice";
+import { getRequests } from "../../store/requestSlice";
 import SMCard from "../../components/SMCard";
 import FamilyFormModal from "../../components/FamilyFormModal";
 
 export default function Dashboard() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const { user } = useSelector((state) => state.auth);
-  const { families } = useSelector((state) => state.family); // ✅ Get families
-  
+  const { requests } = useSelector((state) => state.request);
+  const { families } = useSelector((state) => state.family);
 
   const [showFamilyForm, setShowFamilyForm] = useState(false);
 
+  // 1. Get user on mount
   useEffect(() => {
     dispatch(getUser());
   }, [dispatch]);
 
-  // ✅ Fetch families when user is available
+  // 2. Get families & requests when user loads
   useEffect(() => {
     if (user?.email) {
       dispatch(getFamily(user.email));
+      dispatch(getRequests(user.email));
     }
-  }, [dispatch, user]);
+  }, [dispatch, user?.email]);
 
   const handleLogout = (e) => {
     e.preventDefault();
     dispatch(logout());
     navigate("/login");
   };
+useEffect(() => {
+  console.log("🧠 user.email:", user?.email);
+  console.log("📦 requests state:", requests);
+  console.log("🏘️ families state:", families);
+}, [user, requests, families]);
 
   return (
     <div className={styles.db}>
       <div className={styles.cards}>
         <SMCard
-          title={"Number of families"}
-          answer={families.length || "0"} // ✅ Dynamic count
+          title="Number of Families"
+          answer={families?.length || 0}
           cta1="View"
           cta2="Create"
           link="families"
           handleClick2={() => setShowFamilyForm(true)}
+        />
+
+        <SMCard
+          title="Family Requests"
+          answer={requests?.length || 0}
+          cta1="View"
+          link="notifications"
         />
       </div>
 
       <div className={styles.profile}>
         <div>
           <div className={styles.dp}>
-            <img src={user?.avatar?.url} alt="Profile" />
+            <img
+              src={user?.avatar?.url || "https://i.imgur.com/QlRphfQ.jpeg"}
+              alt="Profile"
+            />
           </div>
           {user ? (
             <>
@@ -74,7 +93,10 @@ export default function Dashboard() {
       </div>
 
       {showFamilyForm && (
-        <FamilyFormModal user={user} onClose={() => setShowFamilyForm(false)} />
+        <FamilyFormModal
+          user={user}
+          onClose={() => setShowFamilyForm(false)}
+        />
       )}
     </div>
   );

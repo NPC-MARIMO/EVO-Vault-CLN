@@ -4,10 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import styles from "./FamilyProfile.module.css";
 import CTA from "../../components/CTA";
 import { getParticularFamily } from "../../store/familySlice";
-import {
-  getParticularUser,
-  clearSearchedUser,
-} from "../../store/authSlice";
+import { getParticularUser, clearSearchedUser } from "../../store/authSlice";
+import { sendRequest } from "../../store/requestSlice";
 
 const FamilyProfile = () => {
   const { familyId } = useParams();
@@ -20,11 +18,9 @@ const FamilyProfile = () => {
     (state) => state.family
   );
 
-  const {
-    searchedUser,
-    searchedUserLoading,
-    searchedUserError,
-  } = useSelector((state) => state.auth);
+  const { user, searchedUser, searchedUserLoading, searchedUserError } = useSelector(
+    (state) => state.auth
+  );
 
   useEffect(() => {
     if (familyId) {
@@ -50,9 +46,34 @@ const FamilyProfile = () => {
     setSearch("");
     dispatch(clearSearchedUser());
   };
+  
+const handleSendRequest = () => {
+  console.log("Send Request Clicked");
 
-  if (loading) return <p style={{ textAlign: "center" }}>Loading family details...</p>;
-  if (error) return <p style={{ color: "red", textAlign: "center" }}>{error}</p>;
+  const payload = {
+    from: user._id,
+    to: searchedUser._id,
+    familyId,
+  };
+
+  console.log("Payload to send:", payload);
+
+  dispatch(sendRequest(payload))
+    .then((res) => {
+      alert("Join request sent!");
+      closeModal();
+    })
+    .catch((err) => {
+      alert(`Failed to send request: ${err}`);
+      console.log(err)
+    });
+};
+
+
+  if (loading)
+    return <p style={{ textAlign: "center" }}>Loading family details...</p>;
+  if (error)
+    return <p style={{ color: "red", textAlign: "center" }}>{error}</p>;
   if (!selectedFamily) return null;
 
   return (
@@ -78,7 +99,13 @@ const FamilyProfile = () => {
               </p>
             </div>
           </div>
-          <div style={{ display: "flex", justifyContent: "space-between", gap: "1rem" }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              gap: "1rem",
+            }}
+          >
             <CTA title={"Add Members"} handleClick={handleAddMember} />
             <CTA title={"Manage"} handleClick={handleViewMembers} />
           </div>
@@ -119,7 +146,10 @@ const FamilyProfile = () => {
               <div className={styles.searchResultCard}>
                 <div className={styles.resultHeader}>
                   <img
-                    src={searchedUser.avatar.url || "https://i.imgur.com/QlRphfQ.jpeg"}
+                    src={
+                      searchedUser.avatar.url ||
+                      "https://i.imgur.com/QlRphfQ.jpeg"
+                    }
                     alt="Profile"
                     className={styles.resultAvatar}
                   />
@@ -129,10 +159,8 @@ const FamilyProfile = () => {
                   </div>
                 </div>
                 <CTA
-                  title="Add to Family"
-                  handleClick={() =>
-                    alert(`Add ${searchedUser.username} to family`)
-                  }
+                  title={"Add to Family"}
+                  handleClick={handleSendRequest} // <-- No () here
                 />
               </div>
             )}

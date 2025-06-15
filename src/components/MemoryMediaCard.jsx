@@ -1,24 +1,22 @@
-import React from 'react';
+import React, { memo } from 'react';
 import styles from "./MemoryMediaCard.module.css";
 
-export default function MemoryMediaCard() {
+export default function MemoryMediaCard({memory}) {
   return (
     <div className={styles.MemoryMediaCard}>
       <div className={styles.top}>
         <div className={styles.avatarContainer}>
-          <div className={styles.avatar}></div>
+          <div className={styles.avatar}>
+            <img src={memory.uploadedBy.avatar.url} alt="" />
+          </div>
           <div className={styles.onlineIndicator}></div>
         </div>
         <div className={styles.userInfo}>
           <div className={styles.nameContainer}>
-            <strong className={styles.name}>Shivang Pandey</strong>
-            <span className={styles.time}>2h ago</span>
+            <strong className={styles.name}>{memory.uploadedBy.name}</strong>
+            <span className={styles.time}></span>
           </div>
-          <p className={styles.username}>@npc_ryoshi</p>
-          <div className={styles.tags}>
-            <span className={styles.tag}>#FamilyTrip</span>
-            <span className={styles.tag}>#Vacation2023</span>
-          </div>
+          <p className={styles.username}>{memory.uploadedBy.email}</p>
         </div>
         <button className={styles.menuButton}>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -30,10 +28,12 @@ export default function MemoryMediaCard() {
       </div>
       
       <div className={styles.bottom}>
-        <p className={styles.caption}>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Molestias ex rem nostrum asperiores nihil illum inventore nulla, deleniti aut commodi porro aliquam harum in assumenda.</p>
+        <p className={styles.caption}>{memory.description}</p>
         
         <div className={styles.mediaContainer}>
-          <div className={styles.mediaImage}></div>
+          <div className={styles.mediaImage}>
+            <img src={memory.url} alt="" />
+          </div>
           <div className={styles.mediaOverlay}>
             <button className={styles.mediaButton}>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

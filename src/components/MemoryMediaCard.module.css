@@ -42,7 +42,12 @@
   font-size: 1.2rem;
   box-shadow: 0 0 0 3px #FFFFFF, 0 4px 12px rgba(255, 107, 107, 0.3);
 }
-
+.avatar img{
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
 .onlineIndicator {
   position: absolute;
   bottom: 2px;
@@ -132,14 +137,15 @@
 
 .mediaImage {
   width: 100%;
-  min-height: 400px;
-  height: auto;
   background: linear-gradient(135deg, rgba(255,107,107,0.1) 0%, rgba(255,142,83,0.1) 100%);
   border-radius: 16px;
   object-fit: cover;
   transition: all 0.3s ease;
 }
-
+.mediaImage img{
+  width: 100%;
+  aspect-ratio: 9/16;
+}
 .mediaOverlay {
   position: absolute;
   top: 0;

@@ -8,7 +8,7 @@ import { getParticularUser, clearSearchedUser } from "../../store/authSlice";
 import { sendRequest } from "../../store/requestSlice";
 import MemoryMediaCard from "../../components/MemoryMediaCard";
 import { uploadImage } from "../../services/cloudinary";
-import { createMemory } from "../../store/memorySlice";
+import { createMemory, fetchFamilyMemories } from "../../store/memorySlice";
 
 const FamilyProfile = () => {
   const { familyId } = useParams();
@@ -30,26 +30,29 @@ const FamilyProfile = () => {
 
   const [isDragging, setIsDragging] = useState(false);
 
-  const { selectedFamily, loading, error } = useSelector(
-    (state) => state.family
-  );
-  const { user, searchedUser, searchedUserLoading, searchedUserError } =
-    useSelector((state) => state.auth);
+  const { selectedFamily, loading, error } = useSelector((state) => state.family);
+  const { user, searchedUser, searchedUserLoading, searchedUserError } = useSelector((state) => state.auth);
+  const { familyMemories } = useSelector((state) => state.memory);
+
+
+  
+console.log(familyMemories)
 
   useEffect(() => {
     if (familyId) {
       dispatch(getParticularFamily(familyId));
+      dispatch(fetchFamilyMemories(familyId));
     }
     setMemoryData({
       ...memoryData,
       familyId: familyId,
-      createdBy: user._id,
+      createdBy: user?._id,
     });
-  }, [dispatch, familyId]);
+  }, [dispatch, familyId]);  
 
   const isAdmin =
     selectedFamily?.members?.find(
-      (member) => member.user === user._id || member.user?._id === user._id
+      (member) => member?.user === user?._id || member.user?._id === user?._id
     )?.role === "admin";
 
   const handleAddMember = () => setShowModal(true);
@@ -113,7 +116,6 @@ const FamilyProfile = () => {
     setIsDragging(false);
   };
 
-  // Then modify your upload functions:
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -136,10 +138,6 @@ const FamilyProfile = () => {
       setUploading(false);
     }
   };
-
-  console.log(memoryData);
-
-  // Add similar try/catch/finally to handleDrop
 
   const handleDrop = async (e) => {
     e.preventDefault();
@@ -308,9 +306,23 @@ const FamilyProfile = () => {
           <CTA title={"+"} handleClick={() => setShowMemoryModal(true)} />
         </div>
         <div className={styles.memContainer}>
-          <MemoryMediaCard />
-          <MemoryMediaCard />
-          <MemoryMediaCard />
+         
+
+
+          {
+            familyMemories.map((mem) => (
+              <MemoryMediaCard key={mem._id} memory={mem} />
+            ))
+          }
+
+
+
+
+
+
+
+
+
         </div>
       </div>
       {showMemoryModal && (

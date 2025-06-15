@@ -1,0 +1,233 @@
+.MemoryMediaCard {
+  background: rgba(255, 253, 250, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  width: 100%;
+  max-width: 800px;
+  margin: 1.5rem auto;
+  border-radius: 24px;
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.MemoryMediaCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(31, 38, 135, 0.1);
+}
+
+.top {
+  display: flex;
+  padding: 1.5rem 1.5rem 1rem;
+  align-items: flex-start;
+  position: relative;
+}
+
+.avatarContainer {
+  position: relative;
+  margin-right: 1rem;
+}
+
+.avatar {
+  height: 56px;
+  width: 56px;
+  background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 1.2rem;
+  box-shadow: 0 0 0 3px #FFFFFF, 0 4px 12px rgba(255, 107, 107, 0.3);
+}
+
+.onlineIndicator {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 12px;
+  height: 12px;
+  background: #48BB78;
+  border-radius: 50%;
+  border: 2px solid #FFFFFF;
+}
+
+.userInfo {
+  flex: 1;
+}
+
+.nameContainer {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.25rem;
+}
+
+.name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1A202C;
+  margin-right: 0.75rem;
+}
+
+.time {
+  font-size: 0.75rem;
+  color: #718096;
+  font-weight: 400;
+}
+
+.username {
+  font-size: 0.85rem;
+  color: #718096;
+  margin-bottom: 0.5rem;
+}
+
+.tags {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.tag {
+  font-size: 0.7rem;
+  background: rgba(255, 107, 107, 0.1);
+  color: #FF6B6B;
+  padding: 0.25rem 0.5rem;
+  border-radius: 20px;
+  font-weight: 500;
+}
+
+.menuButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  margin-left: auto;
+}
+
+.menuButton:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.bottom {
+  padding: 0 1.5rem 1.5rem;
+}
+
+.caption {
+  font-size: 0.95rem;
+  color: #4A5568;
+  line-height: 1.6;
+  margin-bottom: 1.25rem;
+}
+
+.mediaContainer {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+.mediaImage {
+  width: 100%;
+  min-height: 400px;
+  height: auto;
+  background: linear-gradient(135deg, rgba(255,107,107,0.1) 0%, rgba(255,142,83,0.1) 100%);
+  border-radius: 16px;
+  object-fit: cover;
+  transition: all 0.3s ease;
+}
+
+.mediaOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.mediaContainer:hover .mediaOverlay {
+  opacity: 1;
+}
+
+.mediaButton {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.mediaButton:hover {
+  transform: scale(1.1);
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.actions {
+  display: flex;
+  gap: 1.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.actionButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #4A5568;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.actionButton:hover {
+  color: #FF6B6B;
+}
+
+.actionButton svg {
+  transition: all 0.2s ease;
+}
+
+.actionButton:hover svg {
+  transform: scale(1.1);
+}
+
+@media (max-width: 768px) {
+  .MemoryMediaCard {
+    border-radius: 20px;
+  }
+  
+  .top {
+    padding: 1.25rem;
+  }
+  
+  .avatar {
+    width: 48px;
+    height: 48px;
+  }
+  
+  .mediaImage {
+    min-height: 300px;
+  }
+  
+  .actions {
+    gap: 1rem;
+  }
+}

@@ -5,7 +5,7 @@ export const uploadImage = async (file) => {
   formData.append("my_file", file);
 
   try {
-    const res = await axios.post(
+    const res = await axios.post( 
       `${import.meta.env.VITE_API_URL}/profile/upload-image`,
       formData,
       {

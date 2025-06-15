@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import styles from "./Notification.module.css";
 import { useDispatch, useSelector } from "react-redux";
-import { getRequests } from "../../store/requestSlice";
+import { getRequests, updateRequest } from "../../store/requestSlice";
 
 export default function Notification() {
   const dispatch = useDispatch();
@@ -12,7 +12,15 @@ export default function Notification() {
     if (userEmail) {
       dispatch(getRequests(userEmail));
     }
-  }, [userEmail]);
+  }, [userEmail, dispatch]);
+
+  const handleAction = (reqId, status) => {
+    console.log(reqId, status);
+    dispatch(updateRequest({ reqId, action: status, email: userEmail }))
+      .unwrap()
+      .then(() => dispatch(getRequests(userEmail)))
+      .catch((err) => console.error("Update failed:", err));
+  };
 
   return (
     <div className={styles.container}>
@@ -30,7 +38,9 @@ export default function Notification() {
             {/* Sender Info */}
             <div className={styles.user}>
               <img
-                src={req.from?.avatar?.url || "https://i.imgur.com/QlRphfQ.jpeg"}
+                src={
+                  req.from?.avatar?.url || "https://i.imgur.com/QlRphfQ.jpeg"
+                }
                 alt="user"
                 className={styles.avatarSmall}
               />
@@ -56,13 +66,25 @@ export default function Notification() {
               </div>
             </div>
 
-            {/* Status + Actions */}
+            {/* Status + Conditional Actions */}
             <div className={styles.footer}>
               <span className={styles.status}>Status: {req.status}</span>
+
+              {/* Show actions only when status is pending */}
               {req.status === "pending" && (
                 <div className={styles.actions}>
-                  <button className={styles.accept}>✅ Accept</button>
-                  <button className={styles.reject}>❌ Reject</button>
+                  <button
+                    className={styles.accept}
+                    onClick={() => handleAction(req._id, "accepted")}
+                  >
+                    ✅ Accept
+                  </button>
+                  <button
+                    className={styles.reject}
+                    onClick={() => handleAction(req._id, "rejected")}
+                  >
+                    ❌ Reject
+                  </button>
                 </div>
               )}
             </div>

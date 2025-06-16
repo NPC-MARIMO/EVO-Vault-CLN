@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 // middleware
 import ProtectedRoute from "./middleware/protectedroute";
@@ -20,15 +20,15 @@ import FamilySettings from "./pages/family/familysettings";
 import VaultViewPage from "./pages/vault/vaultviewpage";
 import Notification from "./pages/dashboard/notification";
 import NF from "./pages/notfound/nf";
-import { useSelector } from "react-redux";
 import PublicRoute from "./middleware/publicroute";
 import ManageFamily from "./pages/family/ManageFamily";
 
 function App() {
-
-
   return (
     <Routes>
+      {/* Root redirect */}
+      <Route path="/" element={<Navigate to="/login" replace />} />
+
       {/* Public Routes */}
       <Route path="/" element={<AuthLayout />}>
         <Route

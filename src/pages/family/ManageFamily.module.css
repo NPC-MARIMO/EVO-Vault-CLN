@@ -1,0 +1,365 @@
+/* ManageFamily.module.css */
+
+.container {
+    position: relative;
+    min-height: 100vh;
+    background: #121212;
+    color: #f5f5f5;
+    padding: 2rem;
+    overflow: hidden;
+    font-family: 'Segoe UI', 'Roboto', 'Oxygen', sans-serif;
+}
+
+.particleContainer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 0;
+}
+
+.diamondParticle {
+    position: absolute;
+    background: linear-gradient(45deg, rgba(196, 168, 118, 0.8), rgba(255, 255, 255, 0.9));
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    transform: translate(-50%, -50%);
+}
+
+.familyHeader {
+    display: flex;
+    gap: 2rem;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 3rem;
+    position: relative;
+    z-index: 1;
+}
+
+.avatarContainer {
+    position: relative;
+    min-width: 120px;
+}
+
+.familyAvatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid rgba(196, 168, 118, 0.5);
+    box-shadow: 0 4px 30px rgba(196, 168, 118, 0.15);
+}
+
+.avatarBorder {
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    border: 1px solid rgba(196, 168, 118, 0.3);
+    border-radius: 50%;
+    z-index: -1;
+}
+
+.familyInfo {
+    flex: 1;
+}
+
+.familyName {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: #f5f5f5;
+    letter-spacing: 0.5px;
+}
+
+.descriptionContainer {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.familyDescription {
+    color: #ccc;
+    line-height: 1.6;
+    margin: 0;
+    flex: 1;
+}
+
+.editButton {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.editButton:hover {
+    background: rgba(196, 168, 118, 0.1);
+}
+
+.editContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.descriptionInput {
+    background: rgba(30, 30, 30, 0.8);
+    border: 1px solid rgba(196, 168, 118, 0.3);
+    border-radius: 8px;
+    padding: 1rem;
+    color: #f5f5f5;
+    font-family: inherit;
+    font-size: 1rem;
+    line-height: 1.5;
+    resize: vertical;
+    min-height: 100px;
+    width: 100%;
+}
+
+.descriptionInput:focus {
+    outline: none;
+    border-color: #C4A876;
+    box-shadow: 0 0 0 2px rgba(196, 168, 118, 0.2);
+}
+
+.editButtons {
+    display: flex;
+    gap: 1rem;
+}
+
+.saveButton {
+    background: #C4A876;
+    color: #1E1E1E;
+    border: none;
+    padding: 0.5rem 1.5rem;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.saveButton:hover {
+    background: #D4B787;
+}
+
+.cancelEditButton {
+    background: transparent;
+    color: #aaa;
+    border: 1px solid rgba(196, 168, 118, 0.3);
+    padding: 0.5rem 1.5rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.cancelEditButton:hover {
+    background: rgba(196, 168, 118, 0.1);
+    color: #C4A876;
+}
+
+.membersContainer {
+    position: relative;
+    z-index: 1;
+    background: rgba(30, 30, 30, 0.5);
+    border-radius: 16px;
+    padding: 2rem;
+    border: 1px solid rgba(196, 168, 118, 0.1);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.tableHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.membersTitle {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #f5f5f5;
+    margin: 0;
+}
+
+.inviteButton {
+    background: #C4A876;
+    color: #1E1E1E;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.inviteButton:hover {
+    background: #D4B787;
+    box-shadow: 0 4px 15px rgba(196, 168, 118, 0.3);
+}
+
+.tableWrapper {
+    overflow-x: auto;
+}
+
+.membersTable {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.tableHeaderRow {
+    background: rgba(196, 168, 118, 0.1);
+}
+
+.tableHeaderCell {
+    padding: 1rem;
+    text-align: left;
+    font-weight: 500;
+    color: #C4A876;
+    border-bottom: 1px solid rgba(196, 168, 118, 0.2);
+}
+
+.tableRow {
+    transition: background-color 0.3s ease;
+}
+
+.tableCell {
+    padding: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.memberInfo {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.memberAvatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid rgba(196, 168, 118, 0.3);
+}
+
+.memberName {
+    font-weight: 500;
+    margin: 0;
+    color: #f5f5f5;
+}
+
+.memberEmail {
+    font-size: 0.85rem;
+    color: #aaa;
+    margin: 0.25rem 0 0;
+}
+
+.memberRole {
+    background: rgba(196, 168, 118, 0.1);
+    color: #C4A876;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.85rem;
+}
+
+.statusBadge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.statusBadge.active {
+    background: rgba(76, 175, 80, 0.1);
+    color: #4CAF50;
+}
+
+.statusBadge.pending {
+    background: rgba(255, 193, 7, 0.1);
+    color: #FFC107;
+}
+
+.actionButtons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.approveButton {
+    background: rgba(76, 175, 80, 0.1);
+    color: #4CAF50;
+    border: 1px solid rgba(76, 175, 80, 0.3);
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.approveButton:hover {
+    background: rgba(76, 175, 80, 0.2);
+}
+
+.rejectButton {
+    background: rgba(244, 67, 54, 0.1);
+    color: #F44336;
+    border: 1px solid rgba(244, 67, 54, 0.3);
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.rejectButton:hover {
+    background: rgba(244, 67, 54, 0.2);
+}
+
+.removeButton {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.removeButton:hover {
+    background: rgba(244, 67, 54, 0.1);
+}
+
+@media (max-width: 768px) {
+    .familyHeader {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .descriptionContainer {
+        justify-content: center;
+    }
+
+    .tableHeader {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+
+    .actionButtons {
+        flex-direction: column;
+    } }

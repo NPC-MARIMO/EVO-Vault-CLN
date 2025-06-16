@@ -55,6 +55,20 @@ export const getParticularFamily = createAsyncThunk(
     }
 );
 
+export const deleteFamilyMember = createAsyncThunk(
+    'family/deleteFamilyMember',
+    async ( { familyId, memberId}, thunkAPI) => {
+        try {
+            const res = await axios.delete(`${import.meta.env.VITE_API_URL}/family/delete-member/${familyId}/${memberId}`);
+            return res.data;
+        } catch (error) {
+            return thunkAPI.rejectWithValue(
+                error.response?.data?.message || "Failed to delete family member"
+            )
+        }
+    }
+)
+
 const familySlice = createSlice({
     name: "family",
     initialState: {
@@ -100,12 +114,21 @@ const familySlice = createSlice({
             })
             .addCase(getParticularFamily.fulfilled, (state, action) => {
                 state.loading = false;
-                state.selectedFamily = action.payload; // ✅ CORRECTED
+                state.selectedFamily = action.payload;
             })
             .addCase(getParticularFamily.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.error.message;
-            });
+            }).addCase(deleteFamilyMember.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(deleteFamilyMember.fulfilled, (state, action) => {
+                state.loading = false;
+            })
+            .addCase(deleteFamilyMember.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message;
+            })
     },
 });
 

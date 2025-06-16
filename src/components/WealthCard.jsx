@@ -11,6 +11,7 @@ const WealthCard = ({
   progress,
   onClickView,
   onClickAction,
+  requestPara,
 }) => {
   const getIcon = () => {
     switch (icon) {
@@ -76,6 +77,7 @@ const WealthCard = ({
         {unit && <span className={styles.unit}>{unit}</span>}
       </div>
 
+      {requestPara && <p>Total Requests : {requestPara}</p>}
       {progress && (
         <div className={styles.progressBar}>
           <div

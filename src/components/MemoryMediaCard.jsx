@@ -26,7 +26,7 @@ const MemoryMediaCard = ({ memory }) => {
               {new Date(memory.createdAt).toLocaleDateString()}
             </span>
           </div>
-          <p className={styles.username}>@{memory.uploadedBy.username}</p>
+          <p className={styles.username}>@{memory.uploadedBy.email}</p>
         </div>
         <button className={styles.menuButton}>
           <svg

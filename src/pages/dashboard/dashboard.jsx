@@ -22,6 +22,9 @@ export default function Dashboard() {
   const [wealthIndex, setWealthIndex] = useState(82);
   const [goldPrice, setGoldPrice] = useState("$2,128.45 ▲1.2%");
 
+  const pendingRequests = requests.filter((request) => request.status === "pending");
+
+
   // Fetch data on mount
   useEffect(() => {
     dispatch(getUser());
@@ -60,19 +63,19 @@ export default function Dashboard() {
     <div className={styles.dashboard}>
       {/* Diamond Particle Background */}
       <div className={styles.diamondParticles}></div>
-      
+
       {/* Security Laser Grid */}
       <div className={styles.laserGrid}></div>
-      
+
       {/* Left Panel - Wealth Overview */}
       <div className={styles.wealthPanel}>
         <div className={styles.heritageHeader}>
           <h1>LEGACY VAULT</h1>
           <h2>Generational Wealth Portal</h2>
         </div>
-        
+
         <div className={styles.wealthOverview}>
-          <WealthCard 
+          <WealthCard
             title="Bloodline Networks"
             value={families?.length || 0}
             trend="+2%"
@@ -80,17 +83,18 @@ export default function Dashboard() {
             onClickView={() => navigate("/families")}
             onClickAction={() => setShowFamilyForm(true)}
           />
-          
-          <WealthCard 
+
+          <WealthCard
             title="Pending Requests"
-            value={requests?.length || 0}
+            value={pendingRequests?.length || 0}
             trend={requests?.length > 0 ? "New" : "Clear"}
+            requestPara={requests?.length || 0}
             icon="request"
             alert={requests?.length > 0}
             onClickView={() => navigate("/notifications")}
           />
-          
-          <WealthCard 
+
+          <WealthCard
             title="Wealth Index"
             value={wealthIndex.toFixed(0)}
             unit="/100"
@@ -98,8 +102,8 @@ export default function Dashboard() {
             icon="wealth"
             progress={wealthIndex}
           />
-          
-          <WealthCard 
+
+          <WealthCard
             title="Gold Holdings"
             value={goldPrice}
             trend="24K"
@@ -107,19 +111,19 @@ export default function Dashboard() {
             onClickView={() => navigate("/assets")}
           />
         </div>
-        
+
         <div className={styles.securityStatus}>
           <SecurityStatus level="Maximum" lastScan="2 minutes ago" />
         </div>
       </div>
-      
+
       {/* Right Panel - Profile */}
       <div className={styles.profilePanel}>
         <div className={styles.profileHeader}>
           <HeritageClock />
           <h3>Dynasty Profile</h3>
         </div>
-        
+
         <div className={styles.profileContent}>
           <div className={styles.profileImage}>
             <img
@@ -129,35 +133,41 @@ export default function Dashboard() {
             />
             <div className={styles.profileBadge}>Verified Bloodline</div>
           </div>
-          
+
           {user ? (
             <div className={styles.profileInfo}>
               <h1>{user.name}</h1>
               <p className={styles.profileTitle}>Patriarch/Matriarch</p>
               <p className={styles.profileUsername}>@{user.username}</p>
-              
+
               <div className={styles.profileBio}>
-                {user.bio || `Custodian of the ${user.name} legacy since ${new Date().getFullYear()}`}
+                {user.bio ||
+                  `Custodian of the ${
+                    user.name
+                  } legacy since ${new Date().getFullYear()}`}
               </div>
-              
+
               <div className={styles.profileActions}>
-                <button 
+                <button
                   className={styles.profileButton}
                   onClick={() => navigate("/profile")}
                 >
                   <span>Edit Dynasty Profile</span>
                   <svg width="20" height="20" viewBox="0 0 24 24">
-                    <path fill="currentColor" d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z" />
+                    <path
+                      fill="currentColor"
+                      d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z"
+                    />
                   </svg>
                 </button>
-                
-                <button 
-                  className={styles.logoutButton}
-                  onClick={handleLogout}
-                >
+
+                <button className={styles.logoutButton} onClick={handleLogout}>
                   <span>Secure Logout</span>
                   <svg width="20" height="20" viewBox="0 0 24 24">
-                    <path fill="currentColor" d="M16,17V14H9V10H16V7L21,12L16,17M14,2A2,2 0 0,1 16,4V6H14V4H5V20H14V18H16V20A2,2 0 0,1 14,22H5A2,2 0 0,1 3,20V4A2,2 0 0,1 5,2H14Z" />
+                    <path
+                      fill="currentColor"
+                      d="M16,17V14H9V10H16V7L21,12L16,17M14,2A2,2 0 0,1 16,4V6H14V4H5V20H14V18H16V20A2,2 0 0,1 14,22H5A2,2 0 0,1 3,20V4A2,2 0 0,1 5,2H14Z"
+                    />
                   </svg>
                 </button>
               </div>
@@ -170,13 +180,10 @@ export default function Dashboard() {
           )}
         </div>
       </div>
-      
+
       {/* Family Form Modal */}
       {showFamilyForm && (
-        <FamilyFormModal
-          user={user}
-          onClose={() => setShowFamilyForm(false)}
-        />
+        <FamilyFormModal user={user} onClose={() => setShowFamilyForm(false)} />
       )}
     </div>
   );

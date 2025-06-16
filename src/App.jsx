@@ -22,57 +22,56 @@ import Notification from "./pages/dashboard/notification";
 import NF from "./pages/notfound/nf";
 import { useSelector } from "react-redux";
 import PublicRoute from "./middleware/publicroute";
+import ManageFamily from "./pages/family/ManageFamily";
 
 function App() {
 
 
   return (
-      <Routes>
-        {/* Public Routes */}
-        <Route path="/" element={<AuthLayout />}>
-          <Route
-            path="/login"
-            element={
-              <PublicRoute>
-                <Login />
-              </PublicRoute>
-            }
-          />
-          <Route
-            path="/register"
-            element={
-              <PublicRoute>
-                <Register />
-              </PublicRoute>
-            }
-          />
-          <Route
-            path="/forgot-password"
-            element={
-              <PublicRoute>
-                <Forgot />
-              </PublicRoute>
-            }
-          />
-        </Route>
+    <Routes>
+      {/* Public Routes */}
+      <Route path="/" element={<AuthLayout />}>
+        <Route
+          path="/login"
+          element={
+            <PublicRoute>
+              <Login />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            <PublicRoute>
+              <Register />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/forgot-password"
+          element={
+            <PublicRoute>
+              <Forgot />
+            </PublicRoute>
+          }
+        />
+      </Route>
 
-        {/* Protected Routes */}
-        <Route element={<ProtectedRoute />}>
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/families" element={<FamilyList />} />
-          <Route path="/family/:familyId" element={<SingleFamily />} />
-          <Route
-            path="/family/:familyId/settings"
-            element={<FamilySettings />}
-          />
-          <Route path="/vault/:vaultId" element={<VaultViewPage />} />
-          <Route path="/notifications" element={<Notification />} />
-        </Route>
+      {/* Protected Routes */}
+      <Route element={<ProtectedRoute />}>
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/families" element={<FamilyList />} />
+        <Route path="/family/:familyId" element={<SingleFamily />} />
+        <Route path="/family/:familyId/manage" element={<ManageFamily />} />
+        <Route path="/family/:familyId/settings" element={<FamilySettings />} />
+        <Route path="/vault/:vaultId" element={<VaultViewPage />} />
+        <Route path="/notifications" element={<Notification />} />
+      </Route>
 
-        {/* Catch All */}
-        <Route path="*" element={<NF />} />
-      </Routes>
+      {/* Catch All */}
+      <Route path="*" element={<NF />} />
+    </Routes>
   );
 }
 

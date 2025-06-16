@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import styles from "./FamilyProfile.module.css";
 import { getParticularFamily } from "../../store/familySlice";
@@ -15,6 +15,7 @@ import MemoryCard from "../../components/MemoryMediaCard";
 const FamilyProfile = () => {
   const { familyId } = useParams();
   const dispatch = useDispatch();
+  const navigate = useNavigate()
 
   const [uploading, setUploading] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -64,11 +65,7 @@ const FamilyProfile = () => {
 
   const handleAddMember = () => setShowModal(true);
   const handleViewMembers = () => {
-    setPopup({
-      text: isAdmin ? "Manage family members" : "View family members",
-      handleClick1: closePopup,
-      cta1: "Continue",
-    });
+    navigate(`/family/${familyId}/manage`)
   };
 
   const handleSearch = () => {
@@ -328,15 +325,15 @@ const FamilyProfile = () => {
             Add Bloodline Member
           </button>
         )}
-        <button className={styles.viewButton} onClick={handleViewMembers}>
-          <svg width="20" height="20" viewBox="0 0 24 24">
-            <path
-              fill="currentColor"
-              d="M12,4.5C7,4.5 2.73,7.61 1,12C2.73,16.39 7,19.5 12,19.5C17,19.5 21.27,16.39 23,12C21.27,7.61 17,4.5 12,4.5M12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9Z"
-            />
-          </svg>
-          {isAdmin ? "Manage Dynasty" : "View Bloodline"}
-        </button>
+          <button className={styles.viewButton} onClick={handleViewMembers}>
+            <svg width="20" height="20" viewBox="0 0 24 24">
+              <path
+                fill="currentColor"
+                d="M12,4.5C7,4.5 2.73,7.61 1,12C2.73,16.39 7,19.5 12,19.5C17,19.5 21.27,16.39 23,12C21.27,7.61 17,4.5 12,4.5M12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9Z"
+              />
+            </svg>
+            {isAdmin ? "Manage Dynasty" : "View Bloodline"}
+          </button>
       </div>
 
       {/* Add Member Modal */}

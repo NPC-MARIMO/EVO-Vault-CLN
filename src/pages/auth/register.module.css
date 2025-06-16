@@ -1,0 +1,448 @@
+/* register.module.css */
+.register {
+    width: 100%;
+    color: #E8E8E8;
+    position: relative;
+}
+
+.securityIndicator {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+}
+
+.sslVisualizer {
+    display: flex;
+    align-items: center;
+    font-size: 0.8rem;
+    color: #D4AF37;
+}
+
+.sslActive {
+    width: 10px;
+    height: 10px;
+    background: #D4AF37;
+    border-radius: 50%;
+    margin-right: 8px;
+    box-shadow: 0 0 10px #D4AF37;
+    animation: pulse 2s infinite;
+}
+
+.threatMeter {
+    font-size: 0.8rem;
+}
+
+.meter {
+    height: 3px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    margin-top: 5px;
+    overflow: hidden;
+}
+
+.meter div {
+    height: 100%;
+    background: linear-gradient(90deg, #D4AF37, #FFD700);
+    transition: width 0.5s ease;
+}
+
+h1 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    font-weight: 300;
+    letter-spacing: 1px;
+}
+
+.progressSteps {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 3rem;
+    position: relative;
+}
+
+.progressSteps::before {
+    content: '';
+    position: absolute;
+    top: 15px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: rgba(212, 175, 55, 0.2);
+    z-index: 1;
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+}
+
+.step span {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+    color: #888;
+    font-size: 0.9rem;
+}
+
+.step p {
+    font-size: 0.8rem;
+    color: #888;
+    margin: 0;
+}
+
+.step.active span {
+    background: #D4AF37;
+    color: #000;
+    font-weight: bold;
+}
+
+.step.active p {
+    color: #D4AF37;
+}
+
+.formStep {
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.inputGroup {
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+.inputGroup input {
+    width: 100%;
+    padding: 1rem 0;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+    color: #FFF;
+    font-size: 1rem;
+    outline: none;
+}
+
+.inputGroup input:focus~label,
+.inputGroup input:not(:placeholder-shown)~label {
+    transform: translateY(-20px);
+    font-size: 0.8rem;
+    color: #D4AF37;
+}
+
+.inputGroup label {
+    position: absolute;
+    left: 0;
+    top: 1rem;
+    color: #888;
+    transition: all 0.3s ease;
+    pointer-events: none;
+}
+
+.inputBorder {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: #D4AF37;
+    transition: width 0.3s ease;
+}
+
+.inputGroup input:focus~.inputBorder {
+    width: 100%;
+}
+
+.crestDescription {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #888;
+    font-size: 0.9rem;
+}
+
+.crestSelection {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.crestOption {
+    aspect-ratio: 1/1;
+    border: 2px solid rgba(212, 175, 55, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.crestOption:hover {
+    border-color: rgba(212, 175, 55, 0.5);
+}
+
+.crestOption.selected {
+    border-color: #D4AF37;
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+}
+
+.crestImage {
+    width: 80%;
+    height: 80%;
+    border-radius: 50%;
+    background: rgba(212, 175, 55, 0.1);
+    position: relative;
+}
+
+.crestImage::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: currentColor;
+    mask-image: var(--crest-icon);
+    mask-size: contain;
+    mask-repeat: no-repeat;
+    mask-position: center;
+}
+
+.crestImage[data-crest="1"] {
+    --crest-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23D4AF37' d='M12,2L4,12L12,22L20,12L12,2M12,4L18,12L12,20L6,12L12,4Z' /%3E%3C/svg%3E");
+}
+
+.crestImage[data-crest="2"] {
+    --crest-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23D4AF37' d='M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1Z' /%3E%3C/svg%3E");
+}
+
+.crestImage[data-crest="3"] {
+    --crest-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23D4AF37' d='M12,3L2,12H5V20H19V12H22L12,3Z' /%3E%3C/svg%3E");
+}
+
+.crestImage[data-crest="4"] {
+    --crest-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23D4AF37' d='M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2Z' /%3E%3C/svg%3E");
+}
+
+.crestImage[data-crest="5"] {
+    --crest-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23D4AF37' d='M12,1L8,5H11V14H13V5H16L12,1M12,23L16,19H13V10H11V19H8L12,23M2,9L6,13H3V20H5V13H8L4,9H2M20,9L16,13H19V20H21V13H18L22,9H20Z' /%3E%3C/svg%3E");
+}
+
+.crestImage[data-crest="6"] {
+    --crest-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23D4AF37' d='M12,5.5A3.5,3.5 0 0,1 15.5,9A3.5,3.5 0 0,1 12,12.5A3.5,3.5 0 0,1 8.5,9A3.5,3.5 0 0,1 12,5.5M5,8C5.56,8 6.08,8.15 6.53,8.42C6.38,9.85 6.8,11.27 7.66,12.38C7.16,13.34 6.16,14 5,14A3,3 0 0,1 2,11A3,3 0 0,1 5,8M19,8A3,3 0 0,1 22,11A3,3 0 0,1 19,14C17.84,14 16.84,13.34 16.34,12.38C17.2,11.27 17.62,9.85 17.47,8.42C17.92,8.15 18.44,8 19,8M5.5,18.25C5.5,16.18 8.41,14.5 12,14.5C15.59,14.5 18.5,16.18 18.5,18.25V20H5.5V18.25M0,20V18.5C0,17.11 1.89,15.94 4.45,15.6C3.86,16.28 3.5,17.22 3.5,18.25V20H0M24,20H20.5V18.25C20.5,17.22 20.14,16.28 19.55,15.6C22.11,15.94 24,17.11 24,18.5V20Z' /%3E%3C/svg%3E");
+}
+
+.vaultOptions {
+    margin-bottom: 2rem;
+}
+
+.optionCard {
+    background: rgba(10, 10, 10, 0.5);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.optionCard h3 {
+    margin: 0 0 0.5rem 0;
+    color: #D4AF37;
+    font-size: 1rem;
+}
+
+.optionCard p {
+    margin: 0;
+    color: #888;
+    font-size: 0.85rem;
+}
+
+.toggleSwitch {
+    position: relative;
+    width: 50px;
+    height: 24px;
+}
+
+.toggleSwitch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggleSwitch label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 34px;
+    cursor: pointer;
+    transition: .4s;
+}
+
+.toggleSwitch label:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 4px;
+    bottom: 4px;
+    background: #888;
+    border-radius: 50%;
+    transition: .4s;
+}
+
+.toggleSwitch input:checked+label {
+    background: rgba(212, 175, 55, 0.3);
+}
+
+.toggleSwitch input:checked+label:before {
+    transform: translateX(26px);
+    background: #D4AF37;
+}
+
+.stepActions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+}
+
+.nextButton,
+.backButton,
+.submitButton {
+    padding: 0.8rem 1.5rem;
+    border-radius: 5px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.nextButton,
+.submitButton {
+    background: linear-gradient(135deg, #D4AF37 0%, #F5D680 100%);
+    color: #000;
+    border: none;
+}
+
+.nextButton:hover,
+.submitButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
+}
+
+.backButton {
+    background: transparent;
+    color: #888;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+.backButton:hover {
+    color: #D4AF37;
+    border-color: #D4AF37;
+}
+
+.submitButton {
+    background: linear-gradient(135deg, #D4AF37 0%, #8B6914 100%);
+}
+
+.footer {
+    margin-top: 2rem;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.footer a {
+    color: #D4AF37;
+    text-decoration: none;
+}
+
+.familyCrestPreview {
+    position: absolute;
+    right: -50px;
+    bottom: -50px;
+    width: 150px;
+    height: 150px;
+    background: rgba(212, 175, 55, 0.05);
+    border: 1px solid rgba(212, 175, 55, 0.1);
+    border-radius: 50%;
+    z-index: -1;
+}
+
+.familyCrestPreview::before {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    right: 20px;
+    bottom: 20px;
+    border: 1px solid rgba(212, 175, 55, 0.1);
+    border-radius: 50%;
+    background: currentColor;
+    mask-image: var(--crest-icon);
+    mask-size: contain;
+    mask-repeat: no-repeat;
+    mask-position: center;
+}
+
+/* Same crest icons as above */
+.familyCrestPreview[data-crest="1"] {
+    --crest-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23D4AF37' d='M12,2L4,12L12,22L20,12L12,2M12,4L18,12L12,20L6,12L12,4Z' /%3E%3C/svg%3E");
+}
+
+.familyCrestPreview[data-crest="2"] {
+    --crest-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23D4AF37' d='M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1Z' /%3E%3C/svg%3E");
+}
+
+.familyCrestPreview[data-crest="3"] {
+    --crest-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23D4AF37' d='M12,3L2,12H5V20H19V12H22L12,3Z' /%3E%3C/svg%3E");
+}
+
+.familyCrestPreview[data-crest="4"] {
+    --crest-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23D4AF37' d='M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2Z' /%3E%3C/svg%3E");
+}
+
+.familyCrestPreview[data-crest="5"] {
+    --crest-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23D4AF37' d='M12,1L8,5H11V14H13V5H16L12,1M12,23L16,19H13V10H11V19H8L12,23M2,9L6,13H3V20H5V13H8L4,9H2M20,9L16,13H19V20H21V13H18L22,9H20Z' /%3E%3C/svg%3E");
+}
+
+.familyCrestPreview[data-crest="6"] {
+    --crest-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23D4AF37' d='M12,5.5A3.5,3.5 0 0,1 15.5,9A3.5,3.5 0 0,1 12,12.5A3.5,3.5 0 0,1 8.5,9A3.5,3.5 0 0,1 12,5.5M5,8C5.56,8 6.08,8.15 6.53,8.42C6.38,9.85 6.8,11.27 7.66,12.38C7.16,13.34 6.16,14 5,14A3,3 0 0,1 2,11A3,3 0 0,1 5,8M19,8A3,3 0 0,1 22,11A3,3 0 0,1 19,14C17.84,14 16.84,13.34 16.34,12.38C17.2,11.27 17.62,9.85 17.47,8.42C17.92,8.15 18.44,8 19,8M5.5,18.25C5.5,16.18 8.41,14.5 12,14.5C15.59,14.5 18.5,16.18 18.5,18.25V20H5.5V18.25M0,20V18.5C0,17.11 1.89,15.94 4.45,15.6C3.86,16.28 3.5,17.22 3.5,18.25V20H0M24,20H20.5V18.25C20.5,17.22 20.14,16.28 19.55,15.6C22.11,15.94 24,17.11 24,18.5V20Z' /%3E%3C/svg%3E");
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 0.7;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0.7;
+    } }

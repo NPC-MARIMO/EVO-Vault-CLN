@@ -2,13 +2,15 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import styles from "./FamilyProfile.module.css";
-import CTA from "../../components/CTA";
 import { getParticularFamily } from "../../store/familySlice";
 import { getParticularUser, clearSearchedUser } from "../../store/authSlice";
 import { sendRequest } from "../../store/requestSlice";
-import MemoryMediaCard from "../../components/MemoryMediaCard";
 import { uploadImage } from "../../services/cloudinary";
 import { createMemory, fetchFamilyMemories } from "../../store/memorySlice";
+import HeritageBadge from "../../components/HeritageBadge";
+import LegacyPopup from "../../components/LegacyPopup";
+import SecurityVerification from "../../components/SecurityVerification";
+import MemoryCard from "../../components/MemoryMediaCard";
 
 const FamilyProfile = () => {
   const { familyId } = useParams();
@@ -29,26 +31,31 @@ const FamilyProfile = () => {
   });
 
   const [isDragging, setIsDragging] = useState(false);
+  const [popup, setPopup] = useState({
+    text: null,
+    handleClick1: null,
+    handleClick2: null,
+    cta1: null,
+    cta2: null,
+  });
 
-  const { selectedFamily, loading, error } = useSelector((state) => state.family);
-  const { user, searchedUser, searchedUserLoading, searchedUserError } = useSelector((state) => state.auth);
+  const { selectedFamily, loading, error } = useSelector(
+    (state) => state.family
+  );
+  const { user, searchedUser } = useSelector((state) => state.auth);
   const { familyMemories } = useSelector((state) => state.memory);
-
-
-  
-console.log(familyMemories)
 
   useEffect(() => {
     if (familyId) {
       dispatch(getParticularFamily(familyId));
       dispatch(fetchFamilyMemories(familyId));
     }
-    setMemoryData({
-      ...memoryData,
+    setMemoryData((prev) => ({
+      ...prev,
       familyId: familyId,
       createdBy: user?._id,
-    });
-  }, [dispatch, familyId]);  
+    }));
+  }, [dispatch, familyId, user?._id]);
 
   const isAdmin =
     selectedFamily?.members?.find(
@@ -56,15 +63,34 @@ console.log(familyMemories)
     )?.role === "admin";
 
   const handleAddMember = () => setShowModal(true);
-
   const handleViewMembers = () => {
-    alert(isAdmin ? "Manage clicked!" : "View clicked!");
+    setPopup({
+      text: isAdmin ? "Manage family members" : "View family members",
+      handleClick1: closePopup,
+      cta1: "Continue",
+    });
   };
 
   const handleSearch = () => {
-    if (!search.trim()) return alert("Please enter a valid email or username.");
+    if (!search.trim()) {
+      setPopup({
+        text: "Please enter a valid email or username",
+        handleClick1: closePopup,
+        cta1: "Understood",
+      });
+      return;
+    }
     dispatch(getParticularUser(search));
   };
+
+  const closePopup = () =>
+    setPopup({
+      text: null,
+      handleClick1: null,
+      handleClick2: null,
+      cta1: null,
+      cta2: null,
+    });
 
   const closeModal = () => {
     setShowModal(false);
@@ -78,6 +104,10 @@ console.log(familyMemories)
       description: "",
       media: null,
       preview: null,
+      url: null,
+      type: "image",
+      familyId,
+      createdBy: user?._id,
     });
   };
 
@@ -90,21 +120,24 @@ console.log(familyMemories)
 
     dispatch(sendRequest(payload))
       .then(() => {
-        alert("Join request sent!");
-        closeModal();
+        setPopup({
+          text: "Join request sent successfully!",
+          handleClick1: closeModal,
+          cta1: "Continue",
+        });
       })
       .catch((err) => {
-        alert(`Failed to send request: ${err}`);
-        console.log(err);
+        setPopup({
+          text: `Failed to send request: ${err.message}`,
+          handleClick1: closePopup,
+          cta1: "Try Again",
+        });
       });
   };
 
   const handleMemoryInputChange = (e) => {
     const { name, value } = e.target;
-    setMemoryData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setMemoryData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleDragOver = (e) => {
@@ -112,9 +145,7 @@ console.log(familyMemories)
     setIsDragging(true);
   };
 
-  const handleDragLeave = () => {
-    setIsDragging(false);
-  };
+  const handleDragLeave = () => setIsDragging(false);
 
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
@@ -130,10 +161,14 @@ console.log(familyMemories)
         media: file,
         preview: previewUrl,
         url: uploadedUrl,
+        type: file.type.startsWith("image/") ? "image" : "video",
       }));
     } catch (err) {
-      alert("File upload failed. Please try again.");
-      console.error(err);
+      setPopup({
+        text: "File upload failed. Please try again.",
+        handleClick1: closePopup,
+        cta1: "Understood",
+      });
     } finally {
       setUploading(false);
     }
@@ -143,37 +178,44 @@ console.log(familyMemories)
     e.preventDefault();
     setIsDragging(false);
     const file = e.dataTransfer.files[0];
-
     if (
       !file ||
       !(file.type.startsWith("image/") || file.type.startsWith("video/"))
-    ) {
+    )
       return;
-    }
 
     try {
-      // First create a preview URL
+      setUploading(true);
       const previewUrl = URL.createObjectURL(file);
-
-      // Then upload to Cloudinary
       const uploadedUrl = await uploadImage(file);
 
       setMemoryData((prev) => ({
         ...prev,
         media: file,
         preview: previewUrl,
-        url: uploadedUrl, // Store the Cloudinary URL
+        url: uploadedUrl,
+        type: file.type.startsWith("image/") ? "image" : "video",
       }));
     } catch (err) {
-      alert("File upload failed. Please try again.");
-      console.error(err);
+      setPopup({
+        text: "File upload failed. Please try again.",
+        handleClick1: closePopup,
+        cta1: "Understood",
+      });
+    } finally {
+      setUploading(false);
     }
   };
+
   const handleSubmitMemory = async (e) => {
     e.preventDefault();
 
     if (!memoryData.url) {
-      alert("Please upload a file first");
+      setPopup({
+        text: "Please upload a file first",
+        handleClick1: closePopup,
+        cta1: "Understood",
+      });
       return;
     }
 
@@ -181,176 +223,236 @@ console.log(familyMemories)
       await dispatch(
         createMemory({
           url: memoryData.url,
-          type: memoryData.media.type.startsWith("image/") ? "image" : "video",
-          familyId: familyId,
+          type: memoryData.type,
+          familyId,
           createdBy: user._id,
           description: memoryData.description,
         })
       ).unwrap();
 
-      closeMemoryModal();
-      alert("Memory created successfully!");
+      setPopup({
+        text: "Memory added to the family vault!",
+        handleClick1: closeMemoryModal,
+        cta1: "Continue",
+      });
+      dispatch(fetchFamilyMemories(familyId));
     } catch (err) {
-      alert(`Failed to create memory: ${err}`);
-      console.error(err);
+      setPopup({
+        text: `Failed to create memory: ${err.message}`,
+        handleClick1: closePopup,
+        cta1: "Try Again",
+      });
     }
   };
 
   if (loading)
-    return <p style={{ textAlign: "center" }}>Loading family details...</p>;
+    return (
+      <div className={styles.loadingContainer}>
+        <div className={styles.loadingAnimation}></div>
+        <p>Authenticating Bloodline Access...</p>
+      </div>
+    );
+
   if (error)
-    return <p style={{ color: "red", textAlign: "center" }}>{error}</p>;
+    return (
+      <div className={styles.errorContainer}>
+        <div className={styles.errorIcon}>⚠️</div>
+        <h3>Security Breach Detected</h3>
+        <p>{error}</p>
+        <button className={styles.securityButton}>
+          Contact Vault Security
+        </button>
+      </div>
+    );
+
   if (!selectedFamily) return null;
 
   return (
-    <div className={styles.container}>
-      <div className={styles.card}>
-        <div className={styles.avatarSection}>
-          <img
-            src={selectedFamily.avatar}
-            alt={`${selectedFamily.name} Avatar`}
-            className={styles.avatar}
+    <div className={styles.legacyContainer}>
+      {popup.text && <LegacyPopup {...popup} />}
+
+      {/* Family Header Section */}
+      <div className={styles.familyHeader}>
+        <div className={styles.familyBadge}>
+          <HeritageBadge
+            tier={selectedFamily.joinPolicy === "open" ? "silver" : "gold"}
           />
         </div>
-        <div className={styles.details}>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <div>
-              <h2 className={styles.familyName}>{selectedFamily.name}</h2>
-              <p className={styles.description}>{selectedFamily.description}</p>
-            </div>
-            <div>
-              <p>
-                {selectedFamily.members.length <= 1 ? "Member" : "Members"}:{" "}
-                {selectedFamily.members.length}
-              </p>
-            </div>
-          </div>
 
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              gap: "1rem",
-            }}
-          >
-            {isAdmin && (
-              <CTA title={"Add Member"} handleClick={handleAddMember} />
-            )}
-            <CTA
-              title={isAdmin ? "Manage" : "View"}
-              handleClick={handleViewMembers}
+        <div className={styles.familyVisual}>
+          <div className={styles.familyCrest}>
+            <img
+              src={selectedFamily.avatar}
+              alt={`${selectedFamily.name} Crest`}
             />
           </div>
+          <div className={styles.familyTitles}>
+            <h1>{selectedFamily.name}</h1>
+            <p className={styles.familyMotto}>
+              {selectedFamily.description || "Family motto not established"}
+            </p>
+          </div>
         </div>
+
+        <SecurityVerification level="maximum" lastVerified="Today" />
+      </div>
+
+      {/* Family Stats */}
+      <div className={styles.familyStats}>
+        <div className={styles.statCard}>
+          <span>Members</span>
+          <strong>{selectedFamily.members.length}</strong>
+        </div>
+        <div className={styles.statCard}>
+          <span>Join Policy</span>
+          <strong className={styles[selectedFamily.joinPolicy]}>
+            {selectedFamily.joinPolicy}
+          </strong>
+        </div>
+        <div className={styles.statCard}>
+          <span>Established</span>
+          <strong>{new Date(selectedFamily.createdAt).getFullYear()}</strong>
+        </div>
+      </div>
+
+      {/* Action Buttons */}
+      <div className={styles.actionButtons}>
+        {isAdmin && (
+          <button className={styles.addButton} onClick={handleAddMember}>
+            <svg width="20" height="20" viewBox="0 0 24 24">
+              <path
+                fill="currentColor"
+                d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"
+              />
+            </svg>
+            Add Bloodline Member
+          </button>
+        )}
+        <button className={styles.viewButton} onClick={handleViewMembers}>
+          <svg width="20" height="20" viewBox="0 0 24 24">
+            <path
+              fill="currentColor"
+              d="M12,4.5C7,4.5 2.73,7.61 1,12C2.73,16.39 7,19.5 12,19.5C17,19.5 21.27,16.39 23,12C21.27,7.61 17,4.5 12,4.5M12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9Z"
+            />
+          </svg>
+          {isAdmin ? "Manage Dynasty" : "View Bloodline"}
+        </button>
       </div>
 
       {/* Add Member Modal */}
       {showModal && (
         <div className={styles.modalOverlay}>
-          <div className={styles.modal}>
-            <h3>Add a Member</h3>
-            <input
-              type="text"
-              placeholder="Search by email or username"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className={styles.searchInput}
-            />
-            <div className={styles.modalActions}>
-              <CTA handleClick={handleSearch} title={"Search"} />
-              <button onClick={closeModal} className={styles.cancelBtn}>
-                Cancel
+          <div className={styles.legacyModal}>
+            <div className={styles.modalHeader}>
+              <h3>Add Bloodline Member</h3>
+              <button onClick={closeModal} className={styles.closeButton}>
+                <svg width="24" height="24" viewBox="0 0 24 24">
+                  <path
+                    fill="currentColor"
+                    d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"
+                  />
+                </svg>
               </button>
             </div>
 
-            {searchedUserLoading && (
-              <p style={{ color: "gray" }}>Searching...</p>
-            )}
+            <div className={styles.modalContent}>
+              <p>Search by email or username to add to your bloodline</p>
 
-            {searchedUserError && (
-              <p style={{ color: "red" }}>{searchedUserError}</p>
-            )}
+              <div className={styles.searchContainer}>
+                <input
+                  type="text"
+                  placeholder="Enter email or username"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className={styles.searchInput}
+                />
+                <button className={styles.searchButton} onClick={handleSearch}>
+                  <svg width="20" height="20" viewBox="0 0 24 24">
+                    <path
+                      fill="currentColor"
+                      d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"
+                    />
+                  </svg>
+                </button>
+              </div>
 
-            {searchedUser && (
-              <div className={styles.searchResultCard}>
-                <div className={styles.resultHeader}>
-                  <img
-                    src={
-                      searchedUser.avatar?.url ||
-                      "https://i.imgur.com/QlRphfQ.jpeg"
-                    }
-                    alt="Profile"
-                    className={styles.resultAvatar}
-                  />
-                  <div className={styles.resultDetails}>
+              {searchedUser && (
+                <div className={styles.userResult}>
+                  <div className={styles.userAvatar}>
+                    <img
+                      src={
+                        searchedUser.avatar?.url ||
+                        "https://i.imgur.com/QlRphfQ.jpeg"
+                      }
+                      alt={searchedUser.username}
+                    />
+                  </div>
+                  <div className={styles.userInfo}>
                     <h4>{searchedUser.username}</h4>
                     <p>{searchedUser.email}</p>
                   </div>
+                  <button
+                    className={styles.inviteButton}
+                    onClick={handleSendRequest}
+                  >
+                    Send Bloodline Invite
+                  </button>
                 </div>
-                <CTA title={"Add to Family"} handleClick={handleSendRequest} />
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
       )}
 
-      <div className={styles.memories}>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            width: "100%",
-          }}
-        >
-          <h1>Memories</h1>
-          <CTA title={"+"} handleClick={() => setShowMemoryModal(true)} />
+      {/* Family Memories Section */}
+      <div className={styles.memoriesSection}>
+        <div className={styles.sectionHeader}>
+          <h2>Generational Memories</h2>
+          <button
+            className={styles.addMemoryButton}
+            onClick={() => setShowMemoryModal(true)}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24">
+              <path
+                fill="currentColor"
+                d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"
+              />
+            </svg>
+            Add Memory
+          </button>
         </div>
-        <div className={styles.memContainer}>
-         
 
-
-          {
-            familyMemories.map((mem) => (
-              <MemoryMediaCard key={mem._id} memory={mem} />
-            ))
-          }
-
-
-
-
-
-
-
-
-
-        </div>
+        {familyMemories.length === 0 ? (
+          <div className={styles.emptyMemories}>
+            <svg width="64" height="64" viewBox="0 0 24 24">
+              <path
+                fill="#D4AF37"
+                d="M4,4H7L9,2H15L17,4H20A2,2 0 0,1 22,6V18A2,2 0 0,1 20,20H4A2,2 0 0,1 2,18V6A2,2 0 0,1 4,4M12,7A5,5 0 0,0 7,12A5,5 0 0,0 12,17A5,5 0 0,0 17,12A5,5 0 0,0 12,7M12,9A3,3 0 0,1 15,12A3,3 0 0,1 12,15A3,3 0 0,1 9,12A3,3 0 0,1 12,9Z"
+              />
+            </svg>
+            <h3>No Memories Yet</h3>
+            <p>Preserve your family's legacy by adding the first memory</p>
+          </div>
+        ) : (
+          <div className={styles.memoriesGrid}>
+            {familyMemories.map((memory) => (
+              <MemoryCard key={memory._id} memory={memory} />
+            ))}
+          </div>
+        )}
       </div>
+
+      {/* Add Memory Modal */}
       {showMemoryModal && (
         <div className={styles.modalOverlay}>
-          <div className={styles.modal}>
+          <div className={styles.legacyModal}>
             <div className={styles.modalHeader}>
-              <h3>Create New Memory</h3>
+              <h3>Preserve a Memory</h3>
               <button onClick={closeMemoryModal} className={styles.closeButton}>
-                <svg
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
+                <svg width="24" height="24" viewBox="0 0 24 24">
                   <path
-                    d="M18 6L6 18"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M6 6L18 18"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
+                    fill="currentColor"
+                    d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"
                   />
                 </svg>
               </button>
@@ -358,18 +460,13 @@ console.log(familyMemories)
 
             <form onSubmit={handleSubmitMemory} className={styles.memoryForm}>
               <div className={styles.formGroup}>
-                <label htmlFor="description" className={styles.inputLabel}>
-                  Description
-                </label>
+                <label>Memory Description</label>
                 <textarea
-                  id="description"
                   name="description"
                   value={memoryData.description}
                   onChange={handleMemoryInputChange}
-                  className={styles.textarea}
+                  placeholder="Share the story behind this memory..."
                   rows="4"
-                  placeholder="Share what makes this memory special..."
-                  required
                 />
               </div>
 
@@ -383,119 +480,60 @@ console.log(familyMemories)
               >
                 {memoryData.preview ? (
                   <div className={styles.previewContainer}>
-                    {memoryData.media.type.startsWith("image/") ? (
-                      <img
-                        src={memoryData.preview}
-                        alt="Preview"
-                        className={styles.previewImage}
-                      />
+                    {memoryData.type === "image" ? (
+                      <img src={memoryData.preview} alt="Memory preview" />
                     ) : (
-                      <div className={styles.videoWrapper}>
-                        <video controls className={styles.previewVideo}>
-                          <source
-                            src={memoryData.preview}
-                            type={memoryData.media.type}
-                          />
-                        </video>
+                      <video controls>
+                        <source
+                          src={memoryData.preview}
+                          type={memoryData.media.type}
+                        />
+                      </video>
+                    )}
+                    {uploading && (
+                      <div className={styles.uploadOverlay}>
+                        <div className={styles.spinner}></div>
+                        <p>Securing your memory...</p>
                       </div>
                     )}
-                    <div className={styles.previewOverlay}>
-                      {uploading && (
-                        <div className={styles.uploadProgress}>
-                          <p>Uploading your file...</p>
-                          {/* You could add a progress bar here */}
-                        </div>
-                      )}
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setMemoryData((prev) => ({
-                            ...prev,
-                            media: null,
-                            preview: null,
-                          }))
-                        }
-                        className={styles.removeMediaBtn}
-                      >
-                        <svg
-                          width="20"
-                          height="20"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M18 6L6 18"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                          <path
-                            d="M6 6L18 18"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
-                        Remove
-                      </button>
-                    </div>
+                    <button
+                      type="button"
+                      className={styles.removeButton}
+                      onClick={() =>
+                        setMemoryData((prev) => ({
+                          ...prev,
+                          media: null,
+                          preview: null,
+                          url: null,
+                        }))
+                      }
+                    >
+                      Remove
+                    </button>
                   </div>
                 ) : (
-                  <div className={styles.uploadContent}>
-                    <div className={styles.uploadIcon}>
-                      <svg
-                        width="48"
-                        height="48"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15"
-                          stroke="#FF6B6B"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M17 8L12 3L7 8"
-                          stroke="#FF6B6B"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M12 3V15"
-                          stroke="#FF6B6B"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </div>
-                    <p className={styles.uploadText}>
-                      Drag & drop a photo or video here
-                    </p>
-                    <p className={styles.uploadSubtext}>or</p>
-                    <label
-                      htmlFor="media-upload"
-                      className={styles.uploadLabel}
-                    >
-                      <span className={styles.uploadBtn}>Browse Files</span>
+                  <div className={styles.uploadPrompt}>
+                    <svg width="48" height="48" viewBox="0 0 24 24">
+                      <path
+                        fill="#D4AF37"
+                        d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"
+                      />
+                      <path
+                        fill="#D4AF37"
+                        d="M12,12C10.34,12 9,13.34 9,15C9,16.66 10.34,18 12,18C13.66,18 15,16.66 15,15C15,13.34 13.66,12 12,12M12,16C11.45,16 11,15.55 11,15C11,14.45 11.45,14 12,14C12.55,14 13,14.45 13,15C13,15.55 12.55,16 12,16Z"
+                      />
+                    </svg>
+                    <p>Drag & drop a photo or video here</p>
+                    <span>or</span>
+                    <label className={styles.browseButton}>
+                      Browse Files
                       <input
-                        id="media-upload"
                         type="file"
                         accept="image/*,video/*"
                         onChange={handleFileChange}
-                        className={styles.fileInput}
+                        hidden
                       />
                     </label>
-                    <p className={styles.fileHint}>
-                      Supports JPG, PNG, MP4 up to 50MB
-                    </p>
                   </div>
                 )}
               </div>
@@ -503,17 +541,17 @@ console.log(familyMemories)
               <div className={styles.formActions}>
                 <button
                   type="button"
+                  className={styles.cancelButton}
                   onClick={closeMemoryModal}
-                  className={styles.secondaryButton}
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className={styles.primaryButton}
-                  disabled={!memoryData.media}
+                  className={styles.submitButton}
+                  disabled={!memoryData.url || uploading}
                 >
-                  Create Memory
+                  {uploading ? "Preserving..." : "Preserve Memory"}
                 </button>
               </div>
             </form>

@@ -1,0 +1,142 @@
+.popupOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.legacyPopup {
+    background: linear-gradient(145deg, #1A1A1A 0%, #0D0D0D 100%);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: 12px;
+    width: 100%;
+    max-width: 400px;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    position: relative;
+    overflow: hidden;
+}
+
+.legacyPopup::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #D4AF37, #F5D680, #D4AF37);
+    background-size: 200% auto;
+    animation: shine 3s linear infinite;
+}
+
+.popupHeader {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.popupHeader h3 {
+    margin: 0;
+    color: #D4AF37;
+    font-size: 1.2rem;
+    letter-spacing: 0.5px;
+}
+
+.popupHeader svg {
+    width: 24px;
+    height: 24px;
+}
+
+.popupContent {
+    margin-bottom: 2rem;
+}
+
+.popupContent p {
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.6;
+    margin: 0;
+}
+
+.popupActions {
+    display: flex;
+    gap: 1rem;
+}
+
+.popupButton {
+    flex: 1;
+    padding: 0.8rem;
+    background: linear-gradient(135deg, #D4AF37 0%, #F5D680 100%);
+    border: none;
+    border-radius: 6px;
+    color: #000;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.popupButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
+}
+
+.secondaryButton {
+    background: transparent;
+    color: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+.secondaryButton:hover {
+    background: rgba(212, 175, 55, 0.1);
+    color: #D4AF37;
+    box-shadow: none;
+}
+
+.securityStamp {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.securityStamp span {
+    font-size: 0.6rem;
+    color: rgba(0, 255, 0, 0.7);
+    letter-spacing: 1px;
+}
+
+.stampLine {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0, 255, 0, 0.5));
+    margin-top: 0.2rem;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes shine {
+    0% {
+        background-position: 0% center;
+    }
+
+    100% {
+        background-position: 200% center;
+    } }

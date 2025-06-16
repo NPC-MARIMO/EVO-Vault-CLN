@@ -1,80 +1,294 @@
-.familyListContainer {
+/* familyList.module.css */
+.legacyContainer {
+  padding: 3rem;
+  background: radial-gradient(ellipse at top, #0A0A0A 0%, #000000 100%);
+  min-height: 100vh;
+}
+
+.heritageHeader {
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+.heritageHeader h1 {
+  font-size: 2.5rem;
+  color: #D4AF37;
+  margin-bottom: 0.5rem;
+  letter-spacing: 1px;
+}
+
+.heritageHeader p {
+  color: rgba(212, 175, 55, 0.7);
+  font-size: 1rem;
+}
+
+.familyList {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1.5rem;
-  padding: 2rem;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 2rem;
 }
 
-.familyCard {
-  background: #f5e9da;
+.legacyCard {
+  background: rgba(20, 20, 20, 0.7);
+  border: 1px solid rgba(212, 175, 55, 0.2);
   border-radius: 16px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07);
-  padding: 1.5rem;
+  overflow: hidden;
+  position: relative;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.legacyCard:hover {
+  transform: translateY(-5px);
+  border-color: rgba(212, 175, 55, 0.5);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+}
+
+.cardVisual {
+  position: relative;
+  height: 180px;
+  background: linear-gradient(135deg, #1A1A1A 0%, #0D0D0D 100%);
   display: flex;
-  gap: 1rem;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  justify-content: center;
+  align-items: center;
 }
 
-.familyCard:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
-}
-
-.familyAvatar {
-  width: 120px;
-  height: 120px;
+.familyCrest {
+  position: relative;
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid #f0f0f0;
+  border: 3px solid #D4AF37;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
 }
 
-.familyDetails {
-  flex: 1;
+.familyCrest img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cardContent {
+  padding: 1.5rem;
+}
+
+.legacyCard h2 {
+  color: #F5D680;
+  margin: 0 0 0.5rem 0;
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+.familyMotto {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+  text-align: center;
+  font-style: italic;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+}
+
+.heritageStats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.statItem {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  align-items: center;
 }
 
-.familyName {
-  font-size: 1.2rem;
-  font-weight: bold;
-  margin: 0;
-  color: #2e2e2e;
+.statItem span {
+  font-size: 0.7rem;
+  color: rgba(212, 175, 55, 0.7);
+  margin-bottom: 0.3rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.familyDesc {
-  margin: 0.5rem 0;
-  font-size: 0.95rem;
-  color: #666;
+.statItem strong {
+  font-size: 1.1rem;
+  color: #D4AF37;
 }
 
-.familyMeta {
+.statItem strong.open {
+  color: #7CFC00;
+}
+
+.statItem strong.invite {
+  color: #FFD700;
+}
+
+.statItem strong.closed {
+  color: #FF5555;
+}
+
+.cardActions {
   display: flex;
-  flex-direction: column    ;
-  gap: .5rem;
-  justify-content: space-between;
-  font-size: 0.85rem;
-  color: #555;
+  border-top: 1px solid rgba(212, 175, 55, 0.1);
 }
 
-.policy,
-.members {
-  background: #f9f9f9;
-  padding: 0.3rem 0.6rem;
-  border-radius: 6px;
+.viewButton,
+.manageButton {
+  flex: 1;
+  padding: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
 }
 
-.loading,
-.noFamilies {
+.viewButton {
+  background: rgba(212, 175, 55, 0.1);
+  color: #D4AF37;
+  border-right: 1px solid rgba(212, 175, 55, 0.1);
+}
+
+.viewButton:hover {
+  background: rgba(212, 175, 55, 0.2);
+}
+
+.manageButton {
+  background: rgba(20, 20, 20, 0.5);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.manageButton:hover {
+  background: rgba(30, 30, 30, 0.7);
+  color: #FFFFFF;
+}
+
+.cardRibbon {
+  position: absolute;
+  top: 15px;
+  right: -30px;
+  background: rgba(212, 175, 55, 0.9);
+  color: #000;
+  padding: 0.3rem 2rem;
+  font-size: 0.7rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+  transform: rotate(45deg);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Loading State */
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 50vh;
+}
+
+.loadingAnimation {
+  width: 60px;
+  height: 60px;
+  border: 4px solid rgba(212, 175, 55, 0.2);
+  border-top-color: #D4AF37;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1.5rem;
+}
+
+/* Error State */
+.errorContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 50vh;
   text-align: center;
-  font-size: 1rem;
   padding: 2rem;
-  color: #777;
 }
 
-.actions{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;padding: .5rem;
+.errorIcon {
+  font-size: 3rem;
+  margin-bottom: 1.5rem;
+  color: #FF5555;
+}
 
+.errorContainer h3 {
+  color: #FF5555;
+  margin-bottom: 0.5rem;
+}
+
+.errorContainer p {
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 1.5rem;
+}
+
+.securityButton {
+  background: rgba(255, 85, 85, 0.2);
+  color: #FF5555;
+  border: 1px solid #FF5555;
+  padding: 0.7rem 1.5rem;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.securityButton:hover {
+  background: rgba(255, 85, 85, 0.3);
+}
+
+/* Empty State */
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 50vh;
+  text-align: center;
+  padding: 2rem;
+}
+
+.emptyIllustration {
+  width: 120px;
+  height: 120px;
+  background: rgba(212, 175, 55, 0.1);
+  border: 2px dashed rgba(212, 175, 55, 0.3);
+  border-radius: 50%;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.emptyState h3 {
+  color: #D4AF37;
+  margin-bottom: 0.5rem;
+}
+
+.emptyState p {
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 1.5rem;
+}
+
+.createButton {
+  background: linear-gradient(135deg, #D4AF37 0%, #F5D680 100%);
+  color: #000;
+  padding: 0.8rem 2rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.createButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }

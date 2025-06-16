@@ -1,0 +1,47 @@
+.wealthIndicator {
+    position: absolute;
+    bottom: 15px;
+    left: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 2;
+}
+
+.indicatorLabel {
+    font-size: 0.7rem;
+    color: rgba(212, 175, 55, 0.7);
+    margin-bottom: 0.3rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.diamondRow {
+    display: flex;
+    gap: 0.3rem;
+}
+
+.diamond {
+    width: 16px;
+    height: 16px;
+    color: rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.diamond.filled {
+    color: #D4AF37;
+    filter: drop-shadow(0 0 4px rgba(212, 175, 55, 0.7));
+}
+
+.diamond svg {
+    width: 100%;
+    height: 100%;
+}
+
+.wealthValue {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #F5D680;
+    margin-top: 0.3rem;
+    letter-spacing: 0.5px; }

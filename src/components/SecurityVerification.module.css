@@ -1,0 +1,87 @@
+.securityVerification {
+    background: rgba(10, 10, 10, 0.7);
+    border-top: 1px solid rgba(212, 175, 55, 0.1);
+    padding: 1.5rem;
+}
+
+.verificationHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.verificationHeader h3 {
+    margin: 0;
+    font-size: 1rem;
+    color: #D4AF37;
+    letter-spacing: 0.5px;
+}
+
+.lastVerified {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.securityMeter {
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    margin: 1rem 0;
+    overflow: hidden;
+    position: relative;
+}
+
+.meterFill {
+    height: 100%;
+    border-radius: 3px;
+    transition: all 0.5s ease;
+}
+
+.securityLevel {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin: 1.5rem 0;
+}
+
+.levelIcon {
+    font-size: 1.2rem;
+}
+
+.levelLabel {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.6);
+    letter-spacing: 0.5px;
+}
+
+.levelValue {
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin-left: auto;
+}
+
+.securityFeatures {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.feature {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.featureIcon {
+    width: 8px;
+    height: 8px;
+    background: #00FF00;
+    border-radius: 50%;
+    box-shadow: 0 0 5px #00FF00;
+}
+
+.feature span {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.7);
+    letter-spacing: 0.5px; }

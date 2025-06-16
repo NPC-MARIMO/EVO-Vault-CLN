@@ -1,24 +1,23 @@
 import React, { useEffect, useState } from "react";
 import styles from "./profile.module.css";
-import CTA from "../../components/CTA";
-import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { getUser, updateProfile } from "../../store/authSlice";
 import { uploadImage } from "../../services/cloudinary";
-import Popup from "../../components/Popup";
+import HeritageBadge from "../../components/HeritageBadge";
+import SecurityVerification from "../../components/SecurityVerification";
+import LegacyPopup from "../../components/LegacyPopup";
 
 export default function Profile() {
   const dispatch = useDispatch();
-
   const { user } = useSelector((state) => state.auth);
 
   const [popup, setPopup] = useState({
-    text : null,
-    handleClick1 : null,
-    handleClick2 : null,
-    cta1 : null,
-    cta2 : null
+    text: null,
+    handleClick1: null,
+    handleClick2: null,
+    cta1: null,
+    cta2: null,
   });
 
   const [avatarPreview, setAvatarPreview] = useState(null);
@@ -29,9 +28,8 @@ export default function Profile() {
     password: "",
     confirmPassword: "",
     bio: "",
-    avatar: null, // final Cloudinary URL
+    avatar: null,
   });
-
 
   useEffect(() => {
     dispatch(getUser());
@@ -46,9 +44,9 @@ export default function Profile() {
         password: "",
         confirmPassword: "",
         bio: user.bio || "",
-        avatar: user.avatar.url || null,
+        avatar: user.avatar?.url || null,
       });
-      setAvatarPreview(user.avatar || null);
+      setAvatarPreview(user.avatar?.url || null);
     }
   }, [user]);
 
@@ -66,7 +64,11 @@ export default function Profile() {
       setForm((prev) => ({ ...prev, avatar: uploadedUrl }));
       setAvatarPreview(uploadedUrl);
     } catch (err) {
-      alert("Image upload failed.");
+      setPopup({
+        text: "Image upload failed. Please try again.",
+        handleClick1: closePopup,
+        cta1: "Understood",
+      });
     }
   };
 
@@ -80,28 +82,41 @@ export default function Profile() {
       setForm((prev) => ({ ...prev, avatar: uploadedUrl }));
       setAvatarPreview(uploadedUrl);
     } catch (err) {
-      alert("Image upload failed.");
+      setPopup({
+        text: "Image upload failed. Please try again.",
+        handleClick1: closePopup,
+        cta1: "Understood",
+      });
     }
   };
 
   const closePopup = () =>
-  setPopup({
-    text: null,
-    handleClick1: null,
-    handleClick2: null,
-    cta1: null,
-    cta2: null,
-  });
+    setPopup({
+      text: null,
+      handleClick1: null,
+      handleClick2: null,
+      cta1: null,
+      cta2: null,
+    });
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (form.password && form.password !== form.confirmPassword) {
+      setPopup({
+        text: "Passwords do not match",
+        handleClick1: closePopup,
+        cta1: "Try Again",
+      });
+      return;
+    }
 
     const updatedPayload = {
       name: form.name,
       username: form.username,
       bio: form.bio,
       avatar: form.avatar,
-      email : form.email
+      email: form.email,
     };
 
     if (form.password.trim() && form.confirmPassword.trim()) {
@@ -111,115 +126,149 @@ export default function Profile() {
 
     dispatch(updateProfile(updatedPayload));
     setPopup({
-       text:"Profile Updated Successfully",
-        handleClick1 : closePopup, 
-        cta1 : "Close", })
+      text: "Dynasty Profile Updated Successfully",
+      handleClick1: closePopup,
+      cta1: "Continue",
+    });
   };
 
   return (
-    <div className={styles.pf}>
-      {/* popup */}
-      {popup.text && <Popup {...popup} />}
-    
-      <div className={styles.top}>
-        <div className={styles.profile}>
-          <div className={styles.dp}>
-            <img src={form.avatar} alt="Profile" />
-          </div>
-          <div className={styles.name}>
-            <h1>{form.name || "Your Name"}</h1>
-            <p>@{form.username || "username"}</p>
-            <p>{form.email} (can't be changed!)</p>
-            <p>{form.bio}</p>
-          </div>
-        </div>
+    <div className={styles.legacyProfile}>
+      {popup.text && <LegacyPopup {...popup} />}
+
+      <div className={styles.heritageHeader}>
+        <h1>Dynasty Profile</h1>
+        <p>Manage your bloodline's digital identity</p>
       </div>
 
-      <div className={styles.edit}>
-        <h2>Edit Profile</h2>
-        <form onSubmit={handleSubmit} className={styles.form}>
-          <div className={styles.group}>
-            <label>Name</label>
-            <input
-              name="name"
-              type="text"
-              value={form.name}
-              onChange={handleChange}
-            />
+      <div className={styles.profileContainer}>
+        {/* Profile Display Section */}
+        <div className={styles.profileDisplay}>
+          <div className={styles.heritageBadgeContainer}>
+            <HeritageBadge tier="gold" />
           </div>
 
-          <div className={styles.group}>
-            <label>Username</label>
-            <input
-              name="username"
-              type="text"
-              value={form.username}
-              onChange={handleChange}
-            />
-          </div>
-
-          <div className={styles.group}>
-            <label>Password</label>
-            <input
-              name="password"
-              type="password"
-              value={form.password}
-              onChange={handleChange}
-            />
-          </div>
-
-          <div className={styles.group}>
-            <label>Confirm Password</label>
-            <input
-              name="confirmPassword"
-              type="password"
-              value={form.confirmPassword}
-              onChange={handleChange}
-            />
-          </div>
-
-          <div className={styles.group}>
-            <label>Bio</label>
-            <textarea
-              name="bio"
-              rows="3"
-              value={form.bio}
-              onChange={handleChange}
-            ></textarea>
-          </div>
-
-          <div
-            className={styles.avatarUpload}
-            onDrop={handleDrop}
-            onDragOver={(e) => e.preventDefault()}
-          >
-            {avatarPreview ? (
-              <img
-                style={{ borderRadius: 0 }}
-                src={avatarPreview}
-                alt="Avatar Preview"
-              />
-            ) : (
-              <p>Drag & drop avatar here</p>
-            )}
+          <div className={styles.avatarContainer}>
+            <div
+              className={styles.avatarFrame}
+              onDrop={handleDrop}
+              onDragOver={(e) => e.preventDefault()}
+            >
+              {avatarPreview ? (
+                <img src={avatarPreview} alt="Dynasty Crest" />
+              ) : (
+                <div className={styles.avatarPlaceholder}>
+                  <svg width="48" height="48" viewBox="0 0 24 24">
+                    <path
+                      fill="#D4AF37"
+                      d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"
+                    />
+                  </svg>
+                </div>
+              )}
+            </div>
             <input
               type="file"
               accept="image/*"
               onChange={handleFileUpload}
               hidden
+              id="avatarUpload"
             />
-            <button
-              type="button"
-              onClick={() =>
-                document.querySelector('input[type="file"]').click()
-              }
-            >
-              Upload Avatar
-            </button>
+            <label htmlFor="avatarUpload" className={styles.uploadButton}>
+              Update Crest
+            </label>
           </div>
 
-          <CTA title="Save Changes" className={styles.saveBtn} />
-        </form>
+          <div className={styles.profileInfo}>
+            <h2>{form.name || "Patriarch/Matriarch"}</h2>
+            <p className={styles.username}>@{form.username || "bloodline"}</p>
+            <div className={styles.verifiedEmail}>
+              <svg width="16" height="16" viewBox="0 0 24 24">
+                <path
+                  fill="#00FF00"
+                  d="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1M12,11.99L19.53,6.84L21,8.37L12,15.36L7,10.37L8.5,8.84L12,11.99Z"
+                />
+              </svg>
+              <span>{form.email}</span>
+            </div>
+            <p className={styles.bio}>
+              {form.bio || "Custodian of a distinguished bloodline"}
+            </p>
+          </div>
+        </div>
+
+        {/* Security Verification */}
+        <SecurityVerification level="maximum" lastVerified="Today" />
+
+        {/* Edit Profile Form */}
+        <div className={styles.editForm}>
+          <h3>Edit Dynasty Profile</h3>
+
+          <form onSubmit={handleSubmit}>
+            <div className={styles.formGroup}>
+              <label>Patriarch/Matriarch Name</label>
+              <input
+                name="name"
+                type="text"
+                value={form.name}
+                onChange={handleChange}
+                placeholder="Full name of bloodline head"
+              />
+            </div>
+
+            <div className={styles.formGroup}>
+              <label>Bloodline Identifier</label>
+              <input
+                name="username"
+                type="text"
+                value={form.username}
+                onChange={handleChange}
+                placeholder="Unique family identifier"
+              />
+            </div>
+
+            <div className={styles.passwordSection}>
+              <h4>Change Vault Passphrase</h4>
+              <div className={styles.formGroup}>
+                <label>New Passphrase</label>
+                <input
+                  name="password"
+                  type="password"
+                  value={form.password}
+                  onChange={handleChange}
+                  placeholder="Minimum 12 characters"
+                />
+              </div>
+              <div className={styles.formGroup}>
+                <label>Confirm Passphrase</label>
+                <input
+                  name="confirmPassword"
+                  type="password"
+                  value={form.confirmPassword}
+                  onChange={handleChange}
+                  placeholder="Re-enter your passphrase"
+                />
+              </div>
+            </div>
+
+            <div className={styles.formGroup}>
+              <label>Bloodline Motto</label>
+              <textarea
+                name="bio"
+                rows="3"
+                value={form.bio}
+                onChange={handleChange}
+                placeholder="A short declaration of your family's values"
+              ></textarea>
+            </div>
+
+            <div className={styles.formActions}>
+              <button type="submit" className={styles.saveButton}>
+                Seal Updates
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );

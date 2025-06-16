@@ -1,0 +1,20 @@
+.heritageBadge {
+    position: absolute;
+    bottom: -8px;
+    right: -8px;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.3rem 0.6rem;
+    border-radius: 12px;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    z-index: 3;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.heritageBadge svg {
+    width: 12px;
+    height: 12px; }

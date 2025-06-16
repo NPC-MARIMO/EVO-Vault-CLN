@@ -1,68 +1,302 @@
+/* login.module.css */
 .login {
-  width: 420px;
-  min-height: 520px;
-  padding: 2rem;
-  border-radius: 20px;
+  width: 100%;
+  color: #E8E8E8;
+  position: relative;
+}
+
+.securityIndicator {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+
+.sslVisualizer {
+  display: flex;
+  align-items: center;
+  font-size: 0.8rem;
+  color: #D4AF37;
+}
+
+.sslActive {
+  width: 10px;
+  height: 10px;
+  background: #D4AF37;
+  border-radius: 50%;
+  margin-right: 8px;
+  box-shadow: 0 0 10px #D4AF37;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.7;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0.7;
+  }
+}
+
+.threatMeter {
+  font-size: 0.8rem;
+}
+
+.meter {
+  height: 3px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+  margin-top: 5px;
+  overflow: hidden;
+}
+
+.meter div {
+  height: 100%;
+  background: linear-gradient(90deg, #D4AF37, #FFD700);
+  transition: width 0.5s ease;
+}
+
+h1 {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  text-align: center;
+  font-weight: 300;
+  letter-spacing: 1px;
+}
+
+.authMethods {
+  display: flex;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+.authMethod {
+  flex: 1;
+  padding: 0.8rem;
+  background: transparent;
+  border: none;
+  color: #888;
+  font-size: 0.9rem;
+  cursor: pointer;
+  position: relative;
+}
+
+.authMethod.active {
+  color: #D4AF37;
+}
+
+.authMethod.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #D4AF37;
+}
+
+.inputGroup {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+.inputGroup input {
+  width: 100%;
+  padding: 1rem 0;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+  color: #FFF;
+  font-size: 1rem;
+  outline: none;
+}
+
+.inputGroup input:focus~label,
+.inputGroup input:not(:placeholder-shown)~label {
+  transform: translateY(-20px);
+  font-size: 0.8rem;
+  color: #D4AF37;
+}
+
+.inputGroup label {
+  position: absolute;
+  left: 0;
+  top: 1rem;
+  color: #888;
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+.inputBorder {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: #D4AF37;
+  transition: width 0.3s ease;
+}
+
+.inputGroup input:focus~.inputBorder {
+  width: 100%;
+}
+
+.biometricAuth {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  border: 2px solid #e8decf;
-  background-color: #fffdf8;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
-  transition: all 0.3s ease-in-out;
+  margin: 2rem 0;
 }
 
-.login h1 {
-  margin-bottom: 1.5rem;
-  font-size: 2.2rem;
-  color: #3a2f27;
-  font-weight: 700;
+.fingerprint {
+  width: 60px;
+  height: 80px;
+  background: rgba(212, 175, 55, 0.1);
+  border: 2px dashed rgba(212, 175, 55, 0.5);
+  border-radius: 5px;
+  margin-bottom: 1rem;
+  position: relative;
 }
 
-.login input {
-  transition: all 0.3s ease-in-out;
-  border: none;
-  padding: 0.7rem 1rem;
-  border-radius: 8px;
-  margin: 0.6rem 0;
-  font-size: 1.1rem;
-  background: transparent;
-  border-bottom: 2px solid #d3c6ae;
-  width: 100%;
-  max-width: 300px;
-  outline: none;
-  color: #3a2f27;
+.fingerprint::after {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  background:
+    radial-gradient(circle at center, transparent 30%, rgba(212, 175, 55, 0.3) 100%),
+    repeating-linear-gradient(0deg, rgba(212, 175, 55, 0.1) 0px, rgba(212, 175, 55, 0.1) 1px, transparent 1px, transparent 5px);
+  animation: scan 3s infinite;
 }
 
-.login input:focus {
-  border-bottom: 2px solid #ff6b6b;
+@keyframes scan {
+  0% {
+    opacity: 0.3;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0.3;
+  }
 }
 
-.login a {
-  color: #4d3b2d;
-  font-size: 0.95rem;
-  margin-top: 0.5rem;
-  text-decoration: underline;
-  transition: color 0.2s ease;
-}
-
-.login a:hover {
-  color: #ff6b6b;
-}
-
-.login span {
+.options {
+  display: flex;
+  justify-content: space-between;
+  margin: 1.5rem 0;
   font-size: 0.9rem;
-  color: #3a2f27;
-  margin-top: 1rem;
 }
 
-.login span a {
+.options a {
+  color: #888;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.options a:hover {
+  color: #D4AF37;
+}
+
+.twoFactor {
+  display: flex;
+  align-items: center;
+}
+
+.twoFactor input {
+  margin-right: 5px;
+}
+
+.loginButton {
+  width: 100%;
+  padding: 1rem;
+  background: linear-gradient(135deg, #D4AF37 0%, #F5D680 100%);
+  border: none;
+  border-radius: 5px;
+  color: #000;
   font-weight: bold;
-  text-decoration: underline;
-  color: #3a2f27;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  margin-top: 1rem;
+  transition: all 0.3s;
 }
 
-.login span a:hover {
-  color: #ff6b6b;
+.loginButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
+}
+
+.buttonGlow {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: all 0.7s;
+}
+
+.loginButton:hover .buttonGlow {
+  left: 100%;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2rem;
+  font-size: 0.9rem;
+}
+
+.footer a {
+  color: #D4AF37;
+  text-decoration: none;
+}
+
+.panicButton {
+  background: transparent;
+  border: 1px solid rgba(255, 0, 0, 0.3);
+  color: rgba(255, 0, 0, 0.6);
+  padding: 0.3rem 0.6rem;
+  border-radius: 3px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.panicButton:hover {
+  background: rgba(255, 0, 0, 0.1);
+  color: rgba(255, 0, 0, 0.8);
+}
+
+.familyCrest {
+  position: absolute;
+  right: -50px;
+  bottom: -50px;
+  width: 150px;
+  height: 150px;
+  background: rgba(212, 175, 55, 0.05);
+  border: 1px solid rgba(212, 175, 55, 0.1);
+  border-radius: 50%;
+  z-index: -1;
+}
+
+.familyCrest::before {
+  content: '';
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  right: 20px;
+  bottom: 20px;
+  border: 1px solid rgba(212, 175, 55, 0.1);
+  border-radius: 50%;
 }

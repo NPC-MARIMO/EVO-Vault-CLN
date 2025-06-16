@@ -1,0 +1,99 @@
+.securityStatus {
+    background: rgba(10, 10, 10, 0.7);
+    border: 1px solid rgba(0, 255, 0, 0.2);
+    border-radius: 10px;
+    padding: 1.5rem;
+}
+
+.statusHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.statusHeader h3 {
+    margin: 0;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    color: rgba(0, 255, 0, 0.7);
+    text-transform: uppercase;
+}
+
+.lastScan {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.securityMeter {
+    height: 8px;
+    background: rgba(0, 255, 0, 0.1);
+    border-radius: 4px;
+    margin: 1.5rem 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.meterFill {
+    height: 100%;
+    border-radius: 4px;
+    transition: all 0.5s ease;
+}
+
+.meterNotches {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
+
+.notch {
+    position: absolute;
+    width: 2px;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    transform: translateX(-1px);
+}
+
+.securityLevel {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.levelLabel {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.levelValue {
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.securityFeatures {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.feature {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.featureIcon {
+    width: 12px;
+    height: 12px;
+    background: #00FF00;
+    border-radius: 50%;
+    box-shadow: 0 0 5px #00FF00;
+}
+
+.feature span {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.7); }

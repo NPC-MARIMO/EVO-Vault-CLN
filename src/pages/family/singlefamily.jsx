@@ -8,7 +8,7 @@ import { sendRequest } from "../../store/requestSlice";
 import { uploadImage } from "../../services/cloudinary";
 import { createMemory, fetchFamilyMemories } from "../../store/memorySlice";
 import HeritageBadge from "../../components/HeritageBadge";
-import LegacyPopup from "../../components/LegacyPopup";
+import Popup from "../../components/Popup";
 import SecurityVerification from "../../components/SecurityVerification";
 import MemoryCard from "../../components/MemoryMediaCard";
 
@@ -90,8 +90,16 @@ const FamilyProfile = () => {
     });
 
   const closeModal = () => {
+    setPopup({
+      text: null,
+      handleClick1: null,
+      handleClick2: null,
+      cta1: null,
+      cta2: null,
+    }); 
     setShowModal(false);
     setSearch("");
+    
     dispatch(clearSearchedUser());
   };
 
@@ -116,12 +124,10 @@ const FamilyProfile = () => {
     };
 
     dispatch(sendRequest(payload))
-      .then(() => {
         setPopup({
           text: "Join request sent successfully!",
           handleClick1: closeModal,
           cta1: "Continue",
-        });
       })
       .catch((err) => {
         setPopup({
@@ -266,7 +272,7 @@ const FamilyProfile = () => {
 
   return (
     <div className={styles.legacyContainer}>
-      {popup.text && <LegacyPopup {...popup} />}
+      {popup.text && <Popup {...popup} />}
 
       {/* Family Header Section */}
       <div className={styles.familyHeader}>

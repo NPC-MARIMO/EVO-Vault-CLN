@@ -5,9 +5,10 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   deleteFamilyMember,
   getParticularFamily,
-  
+  updateMemberRole,
 } from "../../store/familySlice";
 import { useParams } from "react-router-dom";
+import Popup from "../../components/Popup";
 
 const ManageFamily = () => {
   const dispatch = useDispatch();
@@ -15,19 +16,120 @@ const ManageFamily = () => {
 
   const { selectedFamily } = useSelector((state) => state.family);
 
-  useEffect(() => {
-    if (!selectedFamily || selectedFamily._id !== familyId) {
-      dispatch(getParticularFamily(familyId));
-    }
-  }, [dispatch, familyId, selectedFamily]);
+  const { user } = useSelector((state) => state.auth);
+
+  const isCurrentUserAdmin = () => {
+    if (!selectedFamily || !user) return false;
+    const currentMember = selectedFamily.members.find(
+      (member) => member.user._id === user._id
+    );
+    return currentMember?.role === "admin";
+  };
+
+  const [popup, setPopup] = useState({
+    text: null,
+    handleClick1: null,
+    handleClick2: null,
+    cta1: null,
+    cta2: null,
+  });
+
+  const closePopup = () =>
+    setPopup({
+      text: null,
+      handleClick1: null,
+      handleClick2: null,
+      cta1: null,
+      cta2: null,
+    });
+
+  // Edit member popup state
+  const [editPopup, setEditPopup] = useState({
+    show: false,
+    member: null,
+    selectedRole: "viewer",
+  });
+
+  const closeEditPopup = () =>
+    setEditPopup({
+      show: false,
+      member: null,
+      selectedRole: "member",
+    });
 
   useEffect(() => {
-    if (selectedFamily) {
-      console.log(selectedFamily);
-    } else {
-      console.log("loading");
+    dispatch(getParticularFamily(familyId));
+  }, [dispatch, familyId]);
+
+  const handleEditClick = (member) => {
+    setEditPopup({
+      show: true,
+      member,
+      selectedRole: member.role,
+    });
+  };
+
+  const handleRoleChange = (e) => {
+    setEditPopup((prev) => ({
+      ...prev,
+      selectedRole: e.target.value,
+    }));
+  };
+
+  const handleUpdateRole = async () => {
+    try {
+      await dispatch(
+        updateMemberRole({
+          familyId: selectedFamily._id,
+          memberId: editPopup.member.user._id,
+          role: editPopup.selectedRole,
+        })
+      ).unwrap();
+
+      // Refresh family data
+      await dispatch(getParticularFamily(familyId));
+
+      closeEditPopup();
+      setPopup({
+        text: "Member role updated successfully!",
+        handleClick1: closePopup,
+        cta1: "Continue",
+      });
+    } catch (error) {
+      closeEditPopup();
+      setPopup({
+        text: error.message || "Failed to update member role",
+        handleClick1: closePopup,
+        cta1: "OK",
+      });
     }
-  }, [selectedFamily]);
+  };
+
+  const handleDeleteMember = async (memberId) => {
+    try {
+      await dispatch(
+        deleteFamilyMember({
+          familyId: selectedFamily._id,
+          memberId: memberId,
+        })
+      ).unwrap();
+
+      // Refresh family data after successful deletion
+      await dispatch(getParticularFamily(familyId)).unwrap();
+
+      setPopup({
+        text: "Family member deleted successfully!",
+        handleClick1: closePopup,
+        cta1: "Continue",
+      });
+    } catch (error) {
+      setPopup({
+        text: "Failed to delete member. Please try again.",
+        handleClick1: closePopup,
+        cta1: "OK",
+      });
+    }
+  };
 
   const [diamondParticles] = useState(
     Array.from({ length: 20 }).map(() => ({
@@ -42,6 +144,67 @@ const ManageFamily = () => {
 
   return (
     <div className={styles.container}>
+      {popup.text && <Popup {...popup} />}
+      {editPopup.show && (
+        <div className={styles.fullScreenPopup}>
+          <motion.div
+            className={styles.editPopup}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            transition={{ duration: 0.2 }}
+          >
+            <div className={styles.editPopupHeader}>
+              <h3>Edit Member Role</h3>
+              <button onClick={closeEditPopup} className={styles.closeButton}>
+                &times;
+              </button>
+            </div>
+
+            <div className={styles.memberInfo}>
+              <img
+                src={editPopup.member.user.avatar.url}
+                alt={editPopup.member.user.name}
+                className={styles.popupAvatar}
+              />
+              <div>
+                <p className={styles.popupMemberName}>
+                  {editPopup.member.user.name}
+                </p>
+                <p className={styles.popupMemberEmail}>
+                  {editPopup.member.user.email}
+                </p>
+              </div>
+            </div>
+
+            <div className={styles.roleSelection}>
+              <label htmlFor="role-select">Select Role:</label>
+              <select
+                id="role-select"
+                value={editPopup.selectedRole}
+                onChange={handleRoleChange}
+                className={styles.roleSelect}
+              >
+                <option value="viewer">Viewer</option>
+                <option value="admin">Admin</option>
+              </select>
+            </div>
+
+            <div className={styles.popupActions}>
+              <button onClick={closeEditPopup} className={styles.cancelButton}>
+                Cancel
+              </button>
+              <button
+                onClick={handleUpdateRole}
+                className={styles.updateButton}
+              >
+                Update Role
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      )}
+
       {/* Diamond Particle Background */}
       <div className={styles.particleContainer}>
         {diamondParticles.map((particle) => (
@@ -156,7 +319,7 @@ const ManageFamily = () => {
                         </span>
                       </td>
                       <td className={styles.tableCell}>
-                        {member.role === "admin" && (
+                        {isCurrentUserAdmin() && member.role !== "admin" && (
                           <div className={styles.actionButtons}>
                             {member.status === "pending" && (
                               <>
@@ -169,14 +332,9 @@ const ManageFamily = () => {
                               </>
                             )}
                             <button
-                              onClick={() => {
-                                dispatch(
-                                  deleteFamilyMember({
-                                    familyId: selectedFamily._id,
-                                    memberId: member.user._id,
-                                  })
-                                );
-                              }}
+                              onClick={() =>
+                                handleDeleteMember(member.user._id)
+                              }
                               className={styles.removeButton}
                             >
                               {/* Trash Icon */}
@@ -200,7 +358,10 @@ const ManageFamily = () => {
                                 />
                               </svg>
                             </button>
-                            <button className={styles.editButton}>
+                            <button
+                              onClick={() => handleEditClick(member)}
+                              className={styles.editButton}
+                            >
                               {/* Pencil Icon */}
                               <svg
                                 width="16"

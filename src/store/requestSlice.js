@@ -3,7 +3,6 @@ import axios from "axios";
 
 // 📤 Send a join request
 export const sendRequest = createAsyncThunk("request/send", async (data, thunkAPI) => {
-  console.log("✅ sendRequest thunk called", data);
   try {
     const res = await axios.post(`${import.meta.env.VITE_API_URL}/request/send`, data);
     return res.data;

@@ -362,4 +362,156 @@
 
     .actionButtons {
         flex-direction: column;
-    } }
+    }
+}
+
+
+/* Edit Popup Styles */
+.fullScreenPopup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    backdrop-filter: blur(8px);
+}
+
+.editPopup {
+    background: linear-gradient(145deg, #1a1a1a, #222222);
+    padding: 2rem;
+    border-radius: 16px;
+    width: 450px;
+    max-width: 90vw;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 215, 0, 0.2);
+    position: relative;
+}
+
+.editPopupHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(255, 215, 0, 0.1);
+    padding-bottom: 1rem;
+}
+
+.editPopupHeader h3 {
+    color: rgba(255, 215, 0, 0.9);
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.closeButton {
+    background: none;
+    border: none;
+    color: rgba(255, 215, 0, 0.7);
+    font-size: 1.8rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.closeButton:hover {
+    color: rgba(255, 215, 0, 1);
+    transform: scale(1.1);
+}
+
+.memberInfo {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.popupAvatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(255, 215, 0, 0.5);
+}
+
+.popupMemberName {
+    color: white;
+    font-weight: 600;
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+.popupMemberEmail {
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0.3rem 0 0;
+    font-size: 0.9rem;
+}
+
+.roleSelection {
+    margin-bottom: 2rem;
+}
+
+.roleSelection label {
+    display: block;
+    color: rgba(255, 215, 0, 0.8);
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.roleSelect {
+    width: 100%;
+    padding: 0.8rem;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    color: white;
+    font-family: 'Montserrat', sans-serif;
+    transition: all 0.3s ease;
+}
+
+.roleSelect:focus {
+    outline: none;
+    border-color: rgba(255, 215, 0, 0.7);
+    box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.2);
+}
+
+.popupActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+.cancelButton {
+    padding: 0.7rem 1.5rem;
+    border-radius: 8px;
+    background: transparent;
+    color: rgba(255, 215, 0, 0.8);
+    border: 1px solid rgba(255, 215, 0, 0.5);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.cancelButton:hover {
+    background: rgba(255, 215, 0, 0.1);
+    border-color: rgba(255, 215, 0, 0.8);
+}
+
+.updateButton {
+    padding: 0.7rem 1.5rem;
+    border-radius: 8px;
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.9), rgba(255, 165, 0, 0.9));
+    color: #1a1a1a;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+}
+
+.updateButton:hover {
+    background: linear-gradient(135deg, rgba(255, 165, 0, 0.9), rgba(255, 215, 0, 0.9));
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 165, 0, 0.3);
+}

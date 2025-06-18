@@ -110,7 +110,7 @@ export default function FamilyList() {
                 </svg>
                 View Dynasty
               </button>
-              <button className={styles.manageButton}>
+              <button onClick={() => navigate(`/family/${fam._id}/settings`)} className={styles.manageButton}>
                 <svg width="20" height="20" viewBox="0 0 24 24">
                   <path
                     fill="currentColor"

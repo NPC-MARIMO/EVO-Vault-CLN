@@ -37,7 +37,7 @@ function App() {
             <PublicRoute>
               <Login />
             </PublicRoute>
-          }
+          } 
         />
         <Route
           path="/register"

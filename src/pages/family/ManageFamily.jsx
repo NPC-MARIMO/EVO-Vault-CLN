@@ -321,16 +321,7 @@ const ManageFamily = () => {
                       <td className={styles.tableCell}>
                         {isCurrentUserAdmin() && member.role !== "admin" && (
                           <div className={styles.actionButtons}>
-                            {member.status === "pending" && (
-                              <>
-                                <button className={styles.approveButton}>
-                                  Approve
-                                </button>
-                                <button className={styles.rejectButton}>
-                                  Reject
-                                </button>
-                              </>
-                            )}
+                           
                             <button
                               onClick={() =>
                                 handleDeleteMember(member.user._id)

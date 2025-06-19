@@ -112,13 +112,13 @@
 }
 
 .wealthOverview {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 2rem;
-  margin-bottom: 3rem;
+  gap: 1rem;
+  display: flex;
+    margin-bottom: 3rem;
 }
 
 .securityStatus {
+
   background: rgba(10, 10, 10, 0.6);
   border: 1px solid rgba(212, 175, 55, 0.3);
   border-radius: 12px;

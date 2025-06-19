@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios"; // ✅ make sure axios is imported
+import { create } from "framer-motion/m";
 
 export const createFamily = createAsyncThunk(
     "family/create",
@@ -123,12 +124,42 @@ export const deleteFamily = createAsyncThunk(
             );
         }
     }
-  );
+);
+
+export const get5RandomFamilies = createAsyncThunk(
+    'family/get5RandomFamilies',
+    async (userId, thunkAPI) => {
+        try {
+            const res = await axios.get(`${import.meta.env.VITE_API_URL}/family/five-random-suggestions/${userId}`,);
+            return res.data;
+        } catch (error) {
+            return thunkAPI.rejectWithValue(
+                error.response?.data?.message || "Failed to fetch families"
+            );
+        }
+    }
+)
+
+export const joinRandomFamily = createAsyncThunk(
+    'family/joinRandomFamily',
+    async (data, thunkAPI) => {
+        try {
+            const res = await axios.post(`${import.meta.env.VITE_API_URL}/family/join-random-family`, data);
+            return res.data;
+        } catch (error) {
+            return thunkAPI.rejectWithValue(
+                error.response?.data?.message || "Failed to join random family"
+            );
+        }
+    }
+)
+
 
 const familySlice = createSlice({
     name: "family",
     initialState: {
         families: [],
+        suggestedFamilies: [],
         selectedFamily: null,
         creating: false,
         loading: false,
@@ -250,6 +281,32 @@ const familySlice = createSlice({
                 state.loading = false;
                 state.error = action.payload;
                 state.deleteStatus = 'failed';
+            }).addCase(get5RandomFamilies.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(get5RandomFamilies.fulfilled, (state, action) => {
+                state.loading = false;
+                state.suggestedFamilies = action.payload.suggestions; // assuming backend returns this shape
+                state.error = null;
+            })
+            .addCase(get5RandomFamilies.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload || "Something went wrong while fetching suggestions";
+            }).addCase(joinRandomFamily.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+                state.success = false;
+            })
+            .addCase(joinRandomFamily.fulfilled, (state, action) => {
+                state.loading = false;
+                state.success = true;
+                state.currentFamily = action.payload.family;
+                // Update any other relevant state with the response data
+            })
+            .addCase(joinRandomFamily.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
             })
     },
 });

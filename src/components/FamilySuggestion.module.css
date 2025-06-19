@@ -1,0 +1,119 @@
+.familyCard {
+    background: linear-gradient(135deg, rgba(25, 25, 30, 0.9) 0%, rgba(20, 20, 25, 0.95) 100%);
+    border: 1px solid rgba(212, 175, 55, 0.15);
+    border-radius: 16px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+    height: 512px;
+    overflow: auto;
+    width: 100%;
+    max-width: 350px;
+}
+.card{
+    margin-top: 1rem;
+    overflow: auto;
+}
+
+::-webkit-scrollbar{
+    display: none;
+}
+.title {
+    color: #F5E6C8;
+    font-size: .8rem;
+    margin-bottom: 2rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+.familyCard:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    border-color: rgba(212, 175, 55, 0.3);
+}
+
+.cardHeader {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.familyAvatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(212, 175, 55, 0.3);
+}
+
+.familyInfo {
+    flex: 1;
+}
+
+.familyName {
+    color: #F5E6C8;
+    font-size: 1.2rem;
+    margin: 0 0 0.5rem;
+    font-weight: 500;
+}
+
+.familyDescription {
+    color: rgba(200, 200, 200, 0.8);
+    font-size: 0.9rem;
+    line-height: 1.4;
+    margin: 0;
+}
+
+.familyStats {
+    display: flex;
+    margin-bottom: 1.5rem;
+}
+
+.statItem {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: rgba(212, 175, 55, 0.8);
+    font-size: 0.85rem;
+}
+
+.cardActions {
+    display: flex;
+}
+
+.connectButton {
+    padding: 0.7rem 1.5rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: rgba(212, 175, 55, 0.2);
+    border: 1px solid rgba(212, 175, 55, 0.4);
+    color: #F5E6C8;
+    width: 100%;
+}
+
+.connectButton:hover {
+    background: rgba(212, 175, 55, 0.3);
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.1);
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+    .familyCard {
+        padding: 1.2rem;
+    }
+
+    .familyAvatar {
+        width: 50px;
+        height: 50px;
+    }
+
+    .familyName {
+        font-size: 1.1rem;
+    }
+
+    .familyDescription {
+        font-size: 0.85rem;
+    }
+}

@@ -327,3 +327,238 @@
   background-size: 800px 104px;
   position: relative;
 }
+
+/* Menu styles */
+.menuWrapper {
+  position: relative;
+  margin-left: auto;
+}
+
+.menu {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  background: rgba(15, 15, 20, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 12px;
+  padding: 0.5rem 0;
+  min-width: 160px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  z-index: 10;
+  overflow: hidden;
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: transparent;
+  border: none;
+  color: #E0E0E0;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.menuItem:hover {
+  background: rgba(212, 175, 55, 0.1);
+  color: #D4AF37;
+}
+
+.menuItem svg {
+  transition: transform 0.3s ease;
+}
+
+.menuItem:hover svg {
+  transform: scale(1.1);
+}
+
+.deleteItem {
+  color: #FF4D4F;
+}
+
+.deleteItem:hover {
+  background: rgba(255, 77, 79, 0.1);
+  color: #FF4D4F;
+}
+
+/* Modal styles */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: rgba(15, 15, 20, 0.95);
+  border-radius: 16px;
+  padding: 2rem;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  position: relative;
+}
+
+.closeModal {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #D4AF37;
+  padding: 0.25rem;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.closeModal:hover {
+  background: rgba(212, 175, 55, 0.1);
+  transform: rotate(90deg);
+}
+
+.modalTitle {
+  color: #D4AF37;
+  margin-bottom: 1.5rem;
+  font-size: 1.25rem;
+  text-align: center;
+}
+
+.editTextarea {
+  width: 100%;
+  padding: 1rem;
+  background: rgba(26, 26, 26, 0.8);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 8px;
+  color: #E0E0E0;
+  font-family: 'Montserrat', sans-serif;
+  resize: vertical;
+  min-height: 120px;
+  margin-bottom: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.editTextarea:focus {
+  outline: none;
+  border-color: #D4AF37;
+  box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.cancelButton {
+  padding: 0.75rem 1.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: #E0E0E0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cancelButton:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.saveButton {
+  padding: 0.75rem 1.5rem;
+  background: rgba(212, 175, 55, 0.2);
+  border: 1px solid #D4AF37;
+  border-radius: 8px;
+  color: #D4AF37;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.saveButton:hover {
+  background: rgba(212, 175, 55, 0.3);
+  box-shadow: 0 0 12px rgba(212, 175, 55, 0.2);
+}
+
+/* Add these styles to your MemoryMediaCard.module.css */
+
+.mediaContainer {
+  cursor: pointer;
+  transition: all 0.4s ease;
+}
+
+/* Add this to ensure the overlay stays properly positioned */
+.mediaContainer.fullscreen .mediaOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+.mediaContainer.fullscreen .mediaButton {
+  width: 80px;
+  height: 80px;
+  border: 3px solid rgba(212, 175, 55, 0.6);
+}
+
+
+/* Fullscreen container */
+.fullscreenContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+}
+
+/* Fullscreen image */
+.fullscreenImage {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  display: block;
+  margin: auto;
+}
+
+/* Exit button */
+.fullscreenExitButton {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: rgba(15, 15, 20, 0.7);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10001;
+  transition: all 0.3s ease;
+}
+
+.fullscreenExitButton:hover {
+  background: rgba(212, 175, 55, 0.2);
+  transform: rotate(90deg);
+}
+
+/* Remove any previous fullscreen-related styles */

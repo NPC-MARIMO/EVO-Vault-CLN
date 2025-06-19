@@ -6,6 +6,7 @@
     position: relative;
     overflow: hidden;
     transition: all 0.3s ease;
+    flex: 3;
 }
 
 .wealthCard:hover {

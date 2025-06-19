@@ -6,7 +6,7 @@ import { getParticularFamily } from "../../store/familySlice";
 import { getParticularUser, clearSearchedUser } from "../../store/authSlice";
 import { sendRequest } from "../../store/requestSlice";
 import { uploadImage } from "../../services/cloudinary";
-import { createMemory, fetchFamilyMemories } from "../../store/memorySlice";
+import { createMemory, deleteMemory, fetchFamilyMemories, updateMemoryDescription } from "../../store/memorySlice";
 import HeritageBadge from "../../components/HeritageBadge";
 import Popup from "../../components/Popup";
 import SecurityVerification from "../../components/SecurityVerification";
@@ -114,6 +114,7 @@ const FamilyProfile = () => {
       familyId,
       createdBy: user?._id,
     });
+    closeModal();
   };
 
   const handleSendRequest = () => {
@@ -248,6 +249,32 @@ const FamilyProfile = () => {
     }
   };
 
+  const handleEditMemory = async (memoryId, description) => {
+    try {
+      await dispatch(updateMemoryDescription({ memoryId, description })).unwrap();
+      dispatch(fetchFamilyMemories(familyId));
+    } catch (err) {
+      setPopup({
+        text: `Failed to update memory: ${err.message}`,
+        handleClick1: closePopup,
+        cta1: "Try Again",
+      });
+    }
+  };
+
+  const handleDeleteMemory = async (memoryId) => {
+    try {
+      await dispatch(deleteMemory({ memoryId, userId: user._id })).unwrap();
+      dispatch(fetchFamilyMemories(familyId));
+    } catch (err) {
+      setPopup({
+        text: `Failed to delete memory: ${err.message}`,
+        handleClick1: closePopup,
+        cta1: "Try Again",
+      });
+    }
+  };
+
   if (loading)
     return (
       <div className={styles.loadingContainer}>
@@ -331,15 +358,15 @@ const FamilyProfile = () => {
             Add Bloodline Member
           </button>
         )}
-          <button className={styles.viewButton} onClick={handleViewMembers}>
-            <svg width="20" height="20" viewBox="0 0 24 24">
-              <path
-                fill="currentColor"
-                d="M12,4.5C7,4.5 2.73,7.61 1,12C2.73,16.39 7,19.5 12,19.5C17,19.5 21.27,16.39 23,12C21.27,7.61 17,4.5 12,4.5M12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9Z"
-              />
-            </svg>
-            {isAdmin ? "Manage Dynasty" : "View Bloodline"}
-          </button>
+        <button className={styles.viewButton} onClick={handleViewMembers}>
+          <svg width="20" height="20" viewBox="0 0 24 24">
+            <path
+              fill="currentColor"
+              d="M12,4.5C7,4.5 2.73,7.61 1,12C2.73,16.39 7,19.5 12,19.5C17,19.5 21.27,16.39 23,12C21.27,7.61 17,4.5 12,4.5M12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9Z"
+            />
+          </svg>
+          {isAdmin ? "Manage Dynasty" : "View Bloodline"}
+        </button>
       </div>
 
       {/* Add Member Modal */}
@@ -439,7 +466,12 @@ const FamilyProfile = () => {
         ) : (
           <div className={styles.memoriesGrid}>
             {familyMemories.map((memory) => (
-              <MemoryCard key={memory._id} memory={memory} />
+              <MemoryCard
+                key={memory._id}
+                onDelete={() => handleDeleteMemory(memory._id)}
+                memory={memory}
+                onEdit={handleEditMemory}
+              />
             ))}
           </div>
         )}

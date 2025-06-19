@@ -3,12 +3,13 @@ import styles from "./dashboard.module.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getUser, logout } from "../../store/authSlice";
-import { getFamily } from "../../store/familySlice";
+import { get5RandomFamilies, getFamily } from "../../store/familySlice";
 import { getRequests } from "../../store/requestSlice";
 import FamilyFormModal from "../../components/FamilyFormModal";
 import WealthCard from "../../components/WealthCard";
 import HeritageClock from "../../components/HeritageClock";
 import SecurityStatus from "../../components/SecurityStatus";
+import FamilySuggestion from "../../components/FamilySuggestion";
 
 export default function Dashboard() {
   const dispatch = useDispatch();
@@ -17,13 +18,15 @@ export default function Dashboard() {
   const { user } = useSelector((state) => state.auth);
   const { requests } = useSelector((state) => state.request);
   const { families } = useSelector((state) => state.family);
+  const { suggestedFamilies } = useSelector((state) => state.family);
 
   const [showFamilyForm, setShowFamilyForm] = useState(false);
   const [wealthIndex, setWealthIndex] = useState(82);
   const [goldPrice, setGoldPrice] = useState("$2,128.45 ▲1.2%");
 
-  const pendingRequests = requests.filter((request) => request.status === "pending");
-
+  const pendingRequests = requests.filter(
+    (request) => request.status === "pending"
+  );
 
   // Fetch data on mount
   useEffect(() => {
@@ -34,21 +37,30 @@ export default function Dashboard() {
     if (user?.email) {
       dispatch(getFamily(user.email));
       dispatch(getRequests(user.email));
+      dispatch(get5RandomFamilies(user._id));
     }
   }, [dispatch, user?.email]);
+
 
   // Simulate live data updates
   useEffect(() => {
     const interval = setInterval(() => {
       const fluctuation = (Math.random() * 20 - 10).toFixed(2);
-      const newPrice = (2128.45 + parseFloat(fluctuation)).toLocaleString('en-US', {
-        style: 'currency',
-        currency: 'USD',
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-      });
-      setGoldPrice(`${newPrice} ${fluctuation >= 0 ? '▲' : '▼'}${Math.abs(fluctuation)}%`);
-      setWealthIndex(prev => Math.min(100, Math.max(70, prev + (Math.random() * 4 - 2))));
+      const newPrice = (2128.45 + parseFloat(fluctuation)).toLocaleString(
+        "en-US",
+        {
+          style: "currency",
+          currency: "USD",
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }
+      );
+      setGoldPrice(
+        `${newPrice} ${fluctuation >= 0 ? "▲" : "▼"}${Math.abs(fluctuation)}%`
+      );
+      setWealthIndex((prev) =>
+        Math.min(100, Math.max(70, prev + (Math.random() * 4 - 2)))
+      );
     }, 5000);
     return () => clearInterval(interval);
   }, []);
@@ -75,45 +87,35 @@ export default function Dashboard() {
         </div>
 
         <div className={styles.wealthOverview}>
-          <WealthCard
-            title="Bloodline Networks"
-            value={families?.length || 0}
-            trend="+2%"
-            icon="family"
-            onClickView={() => navigate("/families")}
-            onClickAction={() => setShowFamilyForm(true)}
-          />
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              flexDirection: "column",
+              gap: "1rem",
+            }}
+          >
+            <WealthCard
+              title="Bloodline Networks"
+              value={families?.length || 0}
+              trend="+2%"
+              icon="family"
+              onClickView={() => navigate("/families")}
+              onClickAction={() => setShowFamilyForm(true)}
+            />
 
-          <WealthCard
-            title="Pending Requests"
-            value={pendingRequests?.length || 0}
-            trend={requests?.length > 0 ? "New" : "Clear"}
-            requestPara={requests?.length || 0}
-            icon="request"
-            alert={requests?.length > 0}
-            onClickView={() => navigate("/notifications")}
-          />
+            <WealthCard
+              title="Pending Requests"
+              value={pendingRequests?.length || 0}
+              trend={pendingRequests?.length > 0 ? "New" : "Clear"}
+              requestPara={requests?.length || 0}
+              icon="request"
+              alert={pendingRequests?.length > 0}
+              onClickView={() => navigate("/notifications")}
+            />
+          </div>
 
-          <WealthCard
-            title="Wealth Index"
-            value={wealthIndex.toFixed(0)}
-            unit="/100"
-            trend={wealthIndex > 85 ? "Excellent" : "Good"}
-            icon="wealth"
-            progress={wealthIndex}
-          />
-
-          <WealthCard
-            title="Gold Holdings"
-            value={goldPrice}
-            trend="24K"
-            icon="gold"
-            onClickView={() => navigate("/assets")}
-          />
-        </div>
-
-        <div className={styles.securityStatus}>
-          <SecurityStatus level="Maximum" lastScan="2 minutes ago" />
+              <FamilySuggestion family={suggestedFamilies} />
         </div>
       </div>
 

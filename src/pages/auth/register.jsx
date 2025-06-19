@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styles from "./register.module.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { registerUser } from "../../store/authSlice";
 
@@ -14,7 +14,10 @@ export default function Register() {
   const [selectedCrest, setSelectedCrest] = useState(1);
   const [step, setStep] = useState(1);
 
+  const [errorMessage, setErrorMessage] = useState(null);
   const dispatch = useDispatch();
+
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -24,13 +27,22 @@ export default function Register() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const completeData = {
       ...formData,
       familyCrest: selectedCrest,
     };
-    dispatch(registerUser(completeData));
+    try {
+      const result = await dispatch(registerUser(completeData));
+      if (result?.error) {
+        throw new Error(result.payload || "Registration failed");
+      }
+
+      navigate("/login");
+    } catch (error) {
+      setErrorMessage(error.message || "Invalid credentials");
+    }
   };
 
   const nextStep = () => {
@@ -231,6 +243,19 @@ export default function Register() {
               </div>
             </div>
 
+              {errorMessage && (
+                <div className={styles.errorMessage}>
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="#ff4444"
+                  >
+                    <path d="M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z" />
+                  </svg>
+                  <span>{errorMessage}</span>
+                </div>
+              )}
             <div className={styles.stepActions}>
               <button
                 type="button"
@@ -245,6 +270,8 @@ export default function Register() {
                 </svg>
                 Back
               </button>
+
+
               <button type="submit" className={styles.submitButton}>
                 Seal the Vault
                 <svg width="24" height="24" viewBox="0 0 24 24">

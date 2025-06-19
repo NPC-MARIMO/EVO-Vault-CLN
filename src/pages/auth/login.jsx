@@ -32,16 +32,14 @@ export default function Login() {
 
     try {
       const result = await dispatch(loginUser(loginData));
-
-      // Check if the login was rejected
       if (result?.error) {
-        throw new Error(result.error.message || "Login failed");
+        throw new Error(result.payload || "Login failed");
       }
     } catch (error) {
       // Set the error message from the rejected payload
       setErrorMessage(error.message || "Invalid credentials");
     } finally {
-      setIsLoading(false);
+      setIsLoading(false); 
     }
   };
 

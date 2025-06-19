@@ -546,4 +546,16 @@ h2::after {
     100% {
         opacity: 0.7;
         transform: scale(1);
-    } }
+    }
+}   
+
+@media (max-width: 1000px) {
+    .left {
+        width: 0;
+        overflow: hidden;
+        display: none;
+    }
+    .right{
+        width: 100%;
+    }
+}

@@ -2,6 +2,7 @@
 .register {
     width: 100%;
     color: #E8E8E8;
+    scale: .8;
     position: relative;
 }
 

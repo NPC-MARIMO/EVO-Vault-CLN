@@ -41,7 +41,6 @@ export default function Dashboard() {
     }
   }, [dispatch, user?.email]);
 
-
   // Simulate live data updates
   useEffect(() => {
     const interval = setInterval(() => {
@@ -79,107 +78,106 @@ export default function Dashboard() {
       {/* Security Laser Grid */}
       <div className={styles.laserGrid}></div>
 
-      {/* Left Panel - Wealth Overview */}
-      <div className={styles.wealthPanel}>
-        <div className={styles.heritageHeader}>
-          <h1>LEGACY VAULT</h1>
-          <h2>Generational Wealth Portal</h2>
-        </div>
-
-        <div className={styles.wealthOverview}>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              flexDirection: "column",
-              gap: "1rem",
-            }}
-          >
-            <WealthCard
-              title="Bloodline Networks"
-              value={families?.length || 0}
-              trend="+2%"
-              icon="family"
-              onClickView={() => navigate("/families")}
-              onClickAction={() => setShowFamilyForm(true)}
-            />
-
-            <WealthCard
-              title="Pending Requests"
-              value={pendingRequests?.length || 0}
-              trend={pendingRequests?.length > 0 ? "New" : "Clear"}
-              requestPara={requests?.length || 0}
-              icon="request"
-              alert={pendingRequests?.length > 0}
-              onClickView={() => navigate("/notifications")}
-            />
+      {/* Main Content */}
+      <div className={styles.contentContainer}>
+        {/* Left Panel - Wealth Overview */}
+        <div className={styles.wealthPanel}>
+          <div className={styles.heritageHeader}>
+            <h1>LEGACY VAULT</h1>
+            <h2>Generational Wealth Portal</h2>
           </div>
 
-              <FamilySuggestion family={suggestedFamilies} />
-        </div>
-      </div>
+          <div className={styles.wealthOverview}>
+            <div className={styles.wealthCardsContainer}>
+              <WealthCard
+                title="Bloodline Networks"
+                value={families?.length || 0}
+                trend="+2%"
+                icon="family"
+                onClickView={() => navigate("/families")}
+                onClickAction={() => setShowFamilyForm(true)}
+              />
 
-      {/* Right Panel - Profile */}
-      <div className={styles.profilePanel}>
-        <div className={styles.profileHeader}>
-          <HeritageClock />
-          <h3>Dynasty Profile</h3>
+              <WealthCard
+                title="Pending Requests"
+                value={pendingRequests?.length || 0}
+                trend={pendingRequests?.length > 0 ? "New" : "Clear"}
+                requestPara={requests?.length || 0}
+                icon="request"
+                alert={pendingRequests?.length > 0}
+                onClickView={() => navigate("/notifications")}
+              />
+            </div>
+
+            <FamilySuggestion family={suggestedFamilies} />
+          </div>
         </div>
 
-        <div className={styles.profileContent}>
-          <div className={styles.profileImage}>
-            <img
-              src={user?.avatar?.url || "https://i.imgur.com/QlRphfQ.jpeg"}
-              alt="Profile"
-              className={styles.profilePicture}
-            />
-            <div className={styles.profileBadge}>Verified Bloodline</div>
+        {/* Right Panel - Profile */}
+        <div className={styles.profilePanel}>
+          <div className={styles.profileHeader}>
+            <h3>Dynasty Profile</h3>
+            <HeritageClock />
           </div>
 
-          {user ? (
-            <div className={styles.profileInfo}>
-              <h1>{user.name}</h1>
-              <p className={styles.profileTitle}>Patriarch/Matriarch</p>
-              <p className={styles.profileUsername}>@{user.username}</p>
-
-              <div className={styles.profileBio}>
-                {user.bio ||
-                  `Custodian of the ${
-                    user.name
-                  } legacy since ${new Date().getFullYear()}`}
-              </div>
-
-              <div className={styles.profileActions}>
-                <button
-                  className={styles.profileButton}
-                  onClick={() => navigate("/profile")}
-                >
-                  <span>Edit Dynasty Profile</span>
-                  <svg width="20" height="20" viewBox="0 0 24 24">
-                    <path
-                      fill="currentColor"
-                      d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z"
-                    />
-                  </svg>
-                </button>
-
-                <button className={styles.logoutButton} onClick={handleLogout}>
-                  <span>Secure Logout</span>
-                  <svg width="20" height="20" viewBox="0 0 24 24">
-                    <path
-                      fill="currentColor"
-                      d="M16,17V14H9V10H16V7L21,12L16,17M14,2A2,2 0 0,1 16,4V6H14V4H5V20H14V18H16V20A2,2 0 0,1 14,22H5A2,2 0 0,1 3,20V4A2,2 0 0,1 5,2H14Z"
-                    />
-                  </svg>
-                </button>
-              </div>
+          <div className={styles.profileContent}>
+            <div className={styles.profileImage}>
+              <img
+                src={user?.avatar?.url || "https://i.imgur.com/QlRphfQ.jpeg"}
+                alt="Profile"
+                className={styles.profilePicture}
+              />
+              <div className={styles.profileBadge}>Verified Bloodline</div>
             </div>
-          ) : (
-            <div className={styles.profileLoading}>
-              <div className={styles.loadingAnimation}></div>
-              <p>Authenticating Bloodline...</p>
-            </div>
-          )}
+
+            {user ? (
+              <div className={styles.profileInfo}>
+                <h1>{user.name}</h1>
+                <p className={styles.profileTitle}>Patriarch/Matriarch</p>
+                <p className={styles.profileUsername}>@{user.username}</p>
+
+                <div className={styles.profileBio}>
+                  {user.bio ||
+                    `Custodian of the ${
+                      user.name
+                    } legacy since ${new Date().getFullYear()}`}
+                </div>
+
+                <div className={styles.profileActions}>
+                  <button
+                    className={styles.profileButton}
+                    onClick={() => navigate("/profile")}
+                  >
+                    <span>Edit Dynasty Profile</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24">
+                      <path
+                        fill="currentColor"
+                        d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z"
+                      />
+                    </svg>
+                  </button>
+
+                  <button
+                    className={styles.logoutButton}
+                    onClick={handleLogout}
+                  >
+                    <span>Secure Logout</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24">
+                      <path
+                        fill="currentColor"
+                        d="M16,17V14H9V10H16V7L21,12L16,17M14,2A2,2 0 0,1 16,4V6H14V4H5V20H14V18H16V20A2,2 0 0,1 14,22H5A2,2 0 0,1 3,20V4A2,2 0 0,1 5,2H14Z"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className={styles.profileLoading}>
+                <div className={styles.loadingAnimation}></div>
+                <p>Authenticating Bloodline...</p>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 

@@ -1,13 +1,10 @@
 import React, { useState } from "react";
 import styles from "./register.module.css";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { registerUser } from "../../store/authSlice";
 
 export default function Register() {
-
-  const navigate = useNavigate()
-
   const [formData, setFormData] = useState({
     name: "",
     username: "",
@@ -33,7 +30,7 @@ export default function Register() {
       ...formData,
       familyCrest: selectedCrest,
     };
-    dispatch(registerUser(completeData)).then(() => navigate('/login'))
+    dispatch(registerUser(completeData));
   };
 
   const nextStep = () => {

@@ -1,7 +1,12 @@
 import React from "react";
 import styles from "./FamilySuggestion.module.css";
 import { useDispatch, useSelector } from "react-redux";
-import { get5RandomFamilies, joinRandomFamily } from "../store/familySlice";
+import {
+  get5RandomFamilies,
+  getFamily,
+  joinRandomFamily,
+} from "../store/familySlice";
+import { getRequests } from "../store/requestSlice";
 
 const FamilyCard = ({ family }) => {
   const { user } = useSelector((state) => state.auth);
@@ -9,8 +14,13 @@ const FamilyCard = ({ family }) => {
   const dispatch = useDispatch();
 
   const handleConnect = async (family) => {
-    dispatch(joinRandomFamily({ familyId: family._id, userId: user._id }));
-    dispatch(get5RandomFamilies(user._id));
+    dispatch(joinRandomFamily({ familyId: family._id, userId: user._id })).then(
+      () => {
+        dispatch(get5RandomFamilies(user._id));
+        dispatch(getFamily(user.email));
+        dispatch(getRequests(user.email));
+      }
+    );
   };
 
   return (

@@ -22,6 +22,7 @@ import Notification from "./pages/dashboard/notification";
 import NF from "./pages/notfound/nf";
 import PublicRoute from "./middleware/publicroute";
 import ManageFamily from "./pages/family/ManageFamily";
+import ChangePass from "./pages/auth/changePass";
 
 function App() {
   return (
@@ -37,7 +38,7 @@ function App() {
             <PublicRoute>
               <Login />
             </PublicRoute>
-          } 
+          }
         />
         <Route
           path="/register"
@@ -67,6 +68,10 @@ function App() {
         <Route path="/family/:familyId/settings" element={<FamilySettings />} />
         <Route path="/vault/:vaultId" element={<VaultViewPage />} />
         <Route path="/notifications" element={<Notification />} />
+        <Route
+          path={`/${import.meta.env.VITE_SECRET_URL}/:email`}
+          element={<ChangePass />}
+        />
       </Route>
 
       {/* Catch All */}

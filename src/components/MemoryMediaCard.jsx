@@ -1,5 +1,6 @@
 import React, { memo, useEffect, useState, useRef } from "react";
 import styles from "./MemoryMediaCard.module.css";
+import { useSelector } from "react-redux";
 
 const MemoryMediaCard = ({ memory, onDelete, onEdit }) => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -10,6 +11,14 @@ const MemoryMediaCard = ({ memory, onDelete, onEdit }) => {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const menuRef = useRef(null);
   const mediaContainerRef = useRef(null);
+
+  const { user } = useSelector((state) => state.auth);
+
+  const canUserSee = () => {
+    return user && user._id === memory?.uploadedBy?._id;
+  };
+
+  const canUserView = canUserSee();
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -155,24 +164,46 @@ const MemoryMediaCard = ({ memory, onDelete, onEdit }) => {
 
           {menuOpen && (
             <div className={styles.menu}>
-              <button
-                className={styles.menuItem}
-                onClick={() => {
-                  setIsEditing(true);
-                  setMenuOpen(false);
-                }}
-              >
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  {/* Edit icon */}
-                </svg>
-                Edit
-              </button>
+              {canUserView && (
+                <>
+                  <button
+                    className={styles.menuItem}
+                    onClick={() => {
+                      setIsEditing(true);
+                      setMenuOpen(false);
+                    }}
+                  >
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      {/* Edit icon */}
+                    </svg>
+                    Edit
+                  </button>
+                  <button
+                    className={`${styles.menuItem} ${styles.deleteItem}`}
+                    onClick={() => {
+                      onDelete(memory._id);
+                      setMenuOpen(false);
+                    }}
+                  >
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      {/* Delete icon */}
+                    </svg>
+                    Delete
+                  </button>
+                </>
+              )}
               {/* Add the new Download button */}
               <a download={memory.description} href={memory.url}>
                 <button className={styles.menuItem}>
@@ -208,31 +239,13 @@ const MemoryMediaCard = ({ memory, onDelete, onEdit }) => {
                   Download
                 </button>
               </a>
-              <button
-                className={`${styles.menuItem} ${styles.deleteItem}`}
-                onClick={() => {
-                  onDelete(memory._id);
-                  setMenuOpen(false);
-                }}
-              >
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  {/* Delete icon */}
-                </svg>
-                Delete
-              </button>
             </div>
           )}
         </div>
       </div>
 
       <div className={styles.bottom}>
-        <p className={styles.caption}>{memory.description}</p> 
+        <p className={styles.caption}>{memory.description}</p>
 
         <div
           className={styles.mediaContainer}
